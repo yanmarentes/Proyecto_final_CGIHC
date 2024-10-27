@@ -470,20 +470,13 @@ int main()
 
 		manage_ejecutando_tirada(state_main_movement, &main_character, &info_main_character);
 
-		if (mainWindow.getmuevetee())
-			main_character.set_move(0.01);
-		
-		
 		//Main model Tony Tony Chopper
 
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z));
 		model = glm::rotate(model, glm::radians(main_character.current_rotate), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, main_character.mov_model));
-		//model = glm::translate(model, glm::vec3(0.0f, 0.0f, mainWindow.getmoveer()));
 		model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
-		//printf("%lf\n", mainWindow.getmoveer());
-		//printf("%lf\n", main_character.mov_model_total);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		main_character.RenderModel();
 
