@@ -254,22 +254,32 @@ void CreateShaders()
 	shaderList.push_back(*shader1);
 }
 
+/*
+** Funcion donde se renderizaran todos los modelos dependiendo de cual sea la casilla current
+**
+**
+*/
+void render_current_model(int state_main_movement, int current_casilla, GLuint &uniformModel) {
+	if (state_main_movement == STATE_REPOSO) {
+		glm::mat4 model(1.0);
 
-std::map<int, glm::vec3> crear_rotaciones_dado() {
-	std::map<int, glm::vec3> mapa;
+		switch (current_casilla) {
+		case 1:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y, main_character.ubi_model.z - 14.0f));
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 
-	mapa[1] = glm::vec3(-14.0f, -8.0f, -49.0f);
-	mapa[2] = glm::vec3(132.0f, -107.0f, 1.0f);
-	mapa[3] = glm::vec3(45.0f, -182.0f, -3.0f);
-	mapa[4] = glm::vec3(-130.0f, -145.0f, -3.0f);
-	mapa[5] = glm::vec3(-52.0f, -141.0f, -3.0f);
-	mapa[6] = glm::vec3(124.0f, -40.0f, -9.0f);
-	mapa[7] = glm::vec3(47.0f, -30.0f, -9.0f);
-	mapa[8] = glm::vec3(134.0f, -180.0f, 1.0f);
-	mapa[9] = glm::vec3(138.0f, -256.0f, -89.0f);
-	mapa[10] = glm::vec3(134.0f, -256.0f, -1.0f);
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			Luffy.RenderModel();
+			break;
 
-	return mapa;
+		case 2:
+			// Aqui va las casilla 2 y asi consecutivamente
+			break;
+		
+		default:
+			break;
+		}
+	}
 }
 
 
@@ -495,12 +505,8 @@ int main()
 		dadoTexture.UseTexture();
 		meshList[4]->RenderMesh();
 
-		//Agave �qu� sucede si lo renderizan antes del coche y el helic�ptero?
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(10.0f, 1.0f, -14.0f));
-		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-
+		//Revisar casilla y modelar personaje en turno
+		render_current_model(state_main_movement, info_main_character.current_casilla, uniformModel);
 
 		//Fin
 		glUseProgram(0);
