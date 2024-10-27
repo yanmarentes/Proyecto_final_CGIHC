@@ -171,32 +171,31 @@ void ModelSquareMovement::load_animation_parameters(float distance_corner, float
 		case 0:
 			ubi_model.x = -distance;
 			ubi_model.y = altura;
-			ubi_model.z = -distance;
+			ubi_model.z = distance;
 			side = 0;
-
 			break;
 		case 1:
 			ubi_model.x = -distance;
 			ubi_model.y = altura;
-			ubi_model.z = distance;
+			ubi_model.z = -distance;
 			side = 1;
 			break;
 		case 2:
 			ubi_model.x = distance;
 			ubi_model.y = altura;
-			ubi_model.z = distance;
+			ubi_model.z = -distance;
 			side = 2;
 			break;
 		case 3:
 			ubi_model.x = distance;
 			ubi_model.y = altura;
-			ubi_model.z = -distance;
+			ubi_model.z = distance;
 			side = 3;
 			break;
 		default:
 			ubi_model.x = -distance;
 			ubi_model.y = altura;
-			ubi_model.z = -distance;
+			ubi_model.z = distance;
 			side = 0;
 	}
 	
@@ -216,19 +215,19 @@ void ModelSquareMovement::set_move(float mov) {
 
 		switch (side) {
 		case 0:
-			ubi_model.x = -ubi_model.x;
+			ubi_model.z = -ubi_model.z;
 			break;
 
 		case 1:
-			ubi_model.z = -ubi_model.z;
-			break;
-
-		case 2:
 			ubi_model.x = -ubi_model.x;
 			break;
 
-		case 3:
+		case 2:
 			ubi_model.z = -ubi_model.z;
+			break;
+
+		case 3:
+			ubi_model.x = -ubi_model.x;
 			break;
 		}
 		side++;

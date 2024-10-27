@@ -131,10 +131,10 @@ void CreateObjects()
 	};
 
 	GLfloat floorVertices[] = {
-		-10.0f, 0.0f, -10.0f,	0.0f, 0.0f,		0.0f, -1.0f, 0.0f,
-		10.0f, 0.0f, -10.0f,	1.0f, 0.0f,		0.0f, -1.0f, 0.0f,
-		-10.0f, 0.0f, 10.0f,	0.0f, 1.0f,		0.0f, -1.0f, 0.0f,
-		10.0f, 0.0f, 10.0f,		1.0f, 1.0f,		0.0f, -1.0f, 0.0f
+		-10.0f, 0.0f, -10.0f,	0.0f, 1.0f,		0.0f, -1.0f, 0.0f,
+		10.0f, 0.0f, -10.0f,	1.0f, 1.0f,		0.0f, -1.0f, 0.0f,
+		-10.0f, 0.0f, 10.0f,	0.0f, 0.0f,		0.0f, -1.0f, 0.0f,
+		10.0f, 0.0f, 10.0f,		1.0f, 0.0f,		0.0f, -1.0f, 0.0f
 	};
 
 	unsigned int vegetacionIndices[] = {
@@ -302,11 +302,11 @@ int main()
 
 	// +++++++++++++++++++++++++++++++ Modelos ++++++++++++++++++++++++++++++++
 	main_character.LoadModel("Models/cho_000.obj");
-	main_character.load_animation_parameters(MAIN_DISTANCE_CORNER, -0.7f, 90.0f, 0);
+	main_character.load_animation_parameters(MAIN_DISTANCE_CORNER, -0.7f, 180.0f, 0);
 	float mov_main_character = 0;
 
 	copter.LoadModel("Models/cop.obj");
-	copter.load_animation_parameters(VEHICLES_DISTANCE_CORNER, 0.0f, 0.0f, 2);
+	copter.load_animation_parameters(VEHICLES_DISTANCE_CORNER, 0.0f, 90.0f, 2);
 
 	Helices.LoadModel("Models/helices.obj");
 	Luffy.LoadModel("Models/Luffy.obj");
