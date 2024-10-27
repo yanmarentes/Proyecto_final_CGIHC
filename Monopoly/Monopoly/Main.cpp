@@ -49,7 +49,7 @@ Texture pisoTexture;
 Texture dadoTexture;
 
 ModelSquareMovement main_character;
-ModelSquareMovement helicopter;
+ModelSquareMovement copter;
 Model Helices;
 Model Luffy;
 
