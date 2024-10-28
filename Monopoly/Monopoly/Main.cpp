@@ -38,6 +38,9 @@ const float toRadians = 3.14159265f / 180.0f;
 
 //variables para animaci�n
 float movOffset;
+float modelPosY = -15.0f; // Posición vertical del cartel
+float modelRotation = 0.05f; // Rotación del cartel
+float modelSpeed = 0.1f; // Velocidad del movimiento
 
 Window mainWindow;
 std::vector<Mesh*> meshList;
@@ -51,7 +54,43 @@ Texture dadoTexture;
 ModelSquareMovement main_character;
 ModelSquareMovement copter;
 Model Helices;
+
+//One piece
 Model Luffy;
+Model ace;
+Model ark_maxim;
+Model ship;
+Model zoro;
+Model nami;
+Model moby_dick;
+Model laboon;
+Model brook;
+Model hito;
+Model gomu;
+Model ope;
+Model mera;
+Model sunny;
+Model merry;
+
+//Pokemon
+Model barry;
+Model baya_frambu;
+Model baya_latano;
+Model casa_hoja_verde;
+Model center;
+Model dawn;
+Model garchomp;
+Model Lectro;
+Model lucario;
+Model joy;
+Model oran_berry;
+Model piplup;
+Model league;
+Model shaymin;
+Model estadio;
+
+Model casa_heeler;
+Model botella_vidrio;
 
 Skybox skybox;
 
@@ -265,17 +304,280 @@ void render_current_model(int state_main_movement, int current_casilla, GLuint &
 
 		switch (current_casilla) {
 		case 1:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y, main_character.ubi_model.z - 14.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 16.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			ark_maxim.RenderModel();
+			break;
+		case 2:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 32.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			hito.RenderModel();
+			break;
+		
+		case 3:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 45.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
-
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			merry.RenderModel();
+			break;
+		case 4:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 58.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			laboon.RenderModel();
+			break;
+		case 5:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 71.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			nami.RenderModel();
+			break;
+		case 6:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 82.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			mera.RenderModel();
+			break;
+		case 7:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 97.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			Luffy.RenderModel();
 			break;
-
-		case 2:
-			// Aqui va las casilla 2 y asi consecutivamente
+		case 8:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 105.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			ope.RenderModel();
 			break;
-		
+		case 9:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 118.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			ace.RenderModel();
+			break;
+		case 10:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			ship.RenderModel();
+			break;
+		case 11:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 32.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			zoro.RenderModel();
+			break;
+		case 12:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 45.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			gomu.RenderModel();
+			break;
+		case 13:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 58.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			moby_dick.RenderModel();
+			break;
+		case 14:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 71.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			Luffy.RenderModel();
+			break;
+		case 15:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 82.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			Luffy.RenderModel();
+			break;
+		case 16:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 97.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			Luffy.RenderModel();
+			break;
+		case 17:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 105.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			Luffy.RenderModel();
+			break;
+		case 18:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 118.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			Luffy.RenderModel();
+			break;
+		case 19:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			Luffy.RenderModel();
+			break;
+		case 20:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			Luffy.RenderModel();
+			break;
+		case 21:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			Luffy.RenderModel();
+			break;
+		case 22:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			Luffy.RenderModel();
+			break;
+		case 23:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			Luffy.RenderModel();
+			break;
+		case 24:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			Luffy.RenderModel();
+			break;
+		case 25:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			Luffy.RenderModel();
+			break;
+		case 26:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			shaymin.RenderModel();
+			break;
+		case 27:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			//model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			center.RenderModel();
+			break;
+		case 28:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			//model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			piplup.RenderModel();
+			break;
+		case 29:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			//model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			joy.RenderModel();
+			break;
+		case 30:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			lucario.RenderModel();
+			break;
+		case 31:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			//model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			league.RenderModel();
+			break;
+		case 32:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			Lectro.RenderModel();
+			break;
+		case 33:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			barry.RenderModel();
+			break;
+		case 34:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			garchomp.RenderModel();
+			break;
+		case 35:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			baya_latano.RenderModel();
+			break;
+		case 36:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			dawn.RenderModel();
+			break;
+		case 37:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			baya_frambu.RenderModel();
+			break;
+		case 38:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			casa_hoja_verde.RenderModel();
+			break;
+		case 39:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			oran_berry.RenderModel();
+			break;
 		default:
 			break;
 		}
@@ -310,6 +612,37 @@ int main()
 
 	Helices.LoadModel("Models/helices.obj");
 	Luffy.LoadModel("Models/Luffy.obj");
+	ark_maxim.LoadModel("Models/ark_maxim.obj");
+	baya_frambu.LoadModel("Models/baya_frambu.obj");
+	baya_latano.LoadModel("Models/baya_latano.obj");
+	barry.LoadModel("Models/barry.obj");
+	casa_heeler.LoadModel("Models/casa_heeler.obj");
+	casa_hoja_verde.LoadModel("Models/casa_hoja_verde.obj");
+	center.LoadModel("Models/center.obj");
+	dawn.LoadModel("Models/dawn.obj");
+	estadio.LoadModel("Models/estadio.obj");
+	garchomp.LoadModel("Models/garchomp.obj");
+	Lectro.LoadModel("Models/Lectro.obj");
+	lucario.LoadModel("Models/lucario.obj");
+	moby_dick.LoadModel("Models/Moby Dick.obj");
+	nami.LoadModel("Models/nami.obj");
+	joy.LoadModel("Models/nurse_joy.obj");
+	oran_berry.LoadModel("Models/oran berry.obj");
+	piplup.LoadModel("Models/piplup.obj");
+	league.LoadModel("Models/Pokemon League.obj");
+	shaymin.LoadModel("Models/shaymin.obj");
+	ship.LoadModel("Models/ship.obj");
+	zoro.LoadModel("Models/zoro.obj");
+	ace.LoadModel("Models/Ace.obj");
+	brook.LoadModel("Models/brook.obj");
+	mera.LoadModel("Models/Mera_mera.obj");
+	gomu.LoadModel("Models/gomu_gomu_no_mi.obj");
+	ope.LoadModel("Models/lawsfruit1.obj");
+	sunny.LoadModel("Models/sunny.obj");
+	laboon.LoadModel("Models/Laboon.obj");
+	merry.LoadModel("Models/Going Merry.obj");
+	hito.LoadModel("Models/hito_hito.obj");
+
 
 	// +++++++++++++++++++++++++skybox+++++++++++++++++++++++++++++++++++++++++
 	std::vector<std::string> skyboxFaces;
@@ -376,6 +709,7 @@ int main()
 
 	//Estado
 	int state_main_movement = STATE_REPOSO;
+	int modelstate = 4;
 	
 	//++++++++++++++Dado++++++++++++++++++++++++++++++++
 	Package_Info_Dado info_dado;
@@ -468,7 +802,7 @@ int main()
 		Helices.RenderModel();
 
 
-		manage_ejecutando_tirada(state_main_movement, &main_character, &info_main_character);
+		manage_ejecutando_tirada(state_main_movement, &main_character, &info_main_character, modelstate);
 
 		//Main model Tony Tony Chopper
 
@@ -500,6 +834,38 @@ int main()
 
 		//Revisar casilla y modelar personaje en turno
 		render_current_model(state_main_movement, info_main_character.current_casilla, uniformModel);
+
+		//Movimiento del modelo en turno
+		switch (modelstate) {
+		case 0: //reset
+			modelPosY = -10.0f;
+			modelstate = 1;
+			break;
+		case 1: // Subiendo
+			modelPosY += modelSpeed * deltaTime;
+			if (modelPosY >= 3.0f) {
+				modelPosY = 3.0f;
+				modelstate = 2; // Cambia a girando hacia arriba
+			}
+			break;
+		case 2: // Girando hacia arriba
+			modelRotation += 45.0f * (deltaTime / 8); // 360 grados por segundo
+			if (modelRotation >= 360.0f) {
+				modelRotation = 0.0f;
+				modelstate = 3; // Regresa a bajando
+			}
+			break;
+		case 3: // Bajando
+			modelPosY -= modelSpeed * deltaTime;
+			if (modelPosY <= -10.0f) {
+				modelPosY += 0.1f;
+				modelstate = 4; // Cambia a girando hacia abajo
+			}
+			break;
+		case 4: // Reposo
+			modelPosY = -10.0f;
+			break;
+		}
 
 		//Fin
 		glUseProgram(0);

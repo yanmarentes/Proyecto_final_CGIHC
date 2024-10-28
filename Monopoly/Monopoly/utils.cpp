@@ -54,13 +54,14 @@ void manage_tirando_dado(int &state_main_movement, ModelSquareMovement* main_cha
 	}
 }
 
-void manage_ejecutando_tirada(int &state_main_movement, ModelSquareMovement* main_character, Package_Info_Main_Character* info_main_character) {
+void manage_ejecutando_tirada(int &state_main_movement, ModelSquareMovement* main_character, Package_Info_Main_Character* info_main_character, int &modelstate) {
 	if (state_main_movement == STATE_EJECUTANDO_TIRADA_DADO) {
 		if (main_character->mov_model_total >= info_main_character->real_distance) {
 			main_character->mov_model_since_tirada = 0.0f;
 			info_main_character->real_distance = 0;
 			info_main_character->current_casilla = info_main_character->meta_casilla;
 			state_main_movement = STATE_REPOSO;
+			modelstate = 0;
 		}
 
 		main_character->set_move(0.01);

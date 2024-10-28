@@ -25,7 +25,7 @@ struct Package_Info_Main_Character {
 //float distancia_entre_casillas(int cantidad_dado, int& position_initial, ModelSquareMovement* main_character, int& meta_casilla);
 void manage_get_tirada_dado(Window* mainWindow, int& state_main_movement, Package_Info_Dado* info_dado);
 void manage_tirando_dado(int& state_main_movement, ModelSquareMovement* main_character, Package_Info_Dado* info_dado, Package_Info_Main_Character* info_main_character, float sum_mov_dado);
-void manage_ejecutando_tirada(int& state_main_movement, ModelSquareMovement* main_character, Package_Info_Main_Character* info_main_character);
+void manage_ejecutando_tirada(int& state_main_movement, ModelSquareMovement* main_character, Package_Info_Main_Character* info_main_character, int& modelstate);
 std::map<int, glm::vec3> crear_rotaciones_dado();
 
 #endif
