@@ -1,20 +1,9 @@
-/*
-Semestre 2024-1
-Animación:
-Sesión 1:
-Simple o básica:Por banderas y condicionales (más de 1 transforomación geométrica se ve modificada
-Sesión 2
-Compleja: Por medio de funciones y algoritmos.
-Adicional.- ,Textura Animada
-*/
-//para cargar imagen
 #define STB_IMAGE_IMPLEMENTATION
 
 #include <stdio.h>
 #include <string.h>
 #include <cmath>
 #include <vector>
-#include <math.h>
 #include <chrono>
 #include <map>
 #include <cstdlib>  
@@ -35,23 +24,20 @@ Adicional.- ,Textura Animada
 #include "Camera.h"
 #include "Texture.h"
 #include "Sphere.h"
-#include"Model.h"
+#include "Model.h"
 #include "Skybox.h"
-
-//para iluminación
 #include "CommonValues.h"
+#include "utils.h"
+
+//para iluminaciï¿½n
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
 #include "Material.h"
 const float toRadians = 3.14159265f / 180.0f;
 
-//variables para animación
-float movCoche;
+//variables para animaciï¿½n
 float movOffset;
-
-float movHelicoptero;
-float movDado;
 
 Window mainWindow;
 std::vector<Mesh*> meshList;
@@ -59,24 +45,13 @@ std::vector<Shader> shaderList;
 
 Camera camera;
 
-Texture brickTexture;
-Texture dirtTexture;
-Texture plainTexture;
 Texture pisoTexture;
-Texture AgaveTexture;
 Texture dadoTexture;
 
-Model Kitt_M;
-Model Llanta_M;
-Model Copter;
+ModelSquareMovement main_character;
+ModelSquareMovement copter;
 Model Helices;
-
-struct Ubicacion {
-	float x;
-	float y;
-	float z;
-};
-
+Model Luffy;
 
 Skybox skybox;
 
@@ -103,7 +78,7 @@ static const char* vShader = "shaders/shader_light.vert";
 static const char* fShader = "shaders/shader_light.frag";
 
 
-//función de calculo de normales por promedio de vértices 
+//funciï¿½n de calculo de normales por promedio de vï¿½rtices 
 void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat* vertices, unsigned int verticeCount,
 	unsigned int vLength, unsigned int normalOffset)
 {
@@ -156,10 +131,10 @@ void CreateObjects()
 	};
 
 	GLfloat floorVertices[] = {
-		-10.0f, 0.0f, -10.0f,	0.0f, 0.0f,		0.0f, -1.0f, 0.0f,
-		10.0f, 0.0f, -10.0f,	1.0f, 0.0f,		0.0f, -1.0f, 0.0f,
-		-10.0f, 0.0f, 10.0f,	0.0f, 1.0f,		0.0f, -1.0f, 0.0f,
-		10.0f, 0.0f, 10.0f,		1.0f, 1.0f,		0.0f, -1.0f, 0.0f
+		-10.0f, 0.0f, -10.0f,	0.0f, 1.0f,		0.0f, -1.0f, 0.0f,
+		10.0f, 0.0f, -10.0f,	1.0f, 1.0f,		0.0f, -1.0f, 0.0f,
+		-10.0f, 0.0f, 10.0f,	0.0f, 0.0f,		0.0f, -1.0f, 0.0f,
+		10.0f, 0.0f, 10.0f,		1.0f, 0.0f,		0.0f, -1.0f, 0.0f
 	};
 
 	unsigned int vegetacionIndices[] = {
@@ -208,16 +183,16 @@ void CreateObjects()
 void CrearDado()
 {
 	unsigned int dado_indices[] = {
-		0, 1, 2,  // Triángulo 1
-		3, 4, 5,  // Triángulo 2
-		6, 7, 8,  // Triángulo 3
-		9, 10, 11, // Triángulo 4
-		12, 13, 14, // Triángulo 5
-		15, 16, 17, // Triángulo 6
-		18, 19, 20, // Triángulo 7
-		21, 22, 23, // Triángulo 8
-		24, 25, 26, // Triángulo 9
-		27, 28, 29, // Triángulo 10
+		0, 1, 2,  // Triï¿½ngulo 1
+		3, 4, 5,  // Triï¿½ngulo 2
+		6, 7, 8,  // Triï¿½ngulo 3
+		9, 10, 11, // Triï¿½ngulo 4
+		12, 13, 14, // Triï¿½ngulo 5
+		15, 16, 17, // Triï¿½ngulo 6
+		18, 19, 20, // Triï¿½ngulo 7
+		21, 22, 23, // Triï¿½ngulo 8
+		24, 25, 26, // Triï¿½ngulo 9
+		27, 28, 29, // Triï¿½ngulo 10
 	};
 
 
@@ -279,22 +254,32 @@ void CreateShaders()
 	shaderList.push_back(*shader1);
 }
 
+/*
+** Funcion donde se renderizaran todos los modelos dependiendo de cual sea la casilla current
+**
+**
+*/
+void render_current_model(int state_main_movement, int current_casilla, GLuint &uniformModel) {
+	if (state_main_movement == STATE_REPOSO) {
+		glm::mat4 model(1.0);
 
-std::map<int, glm::vec3> crear_rotaciones_dado() {
-	std::map<int, glm::vec3> mapa;
+		switch (current_casilla) {
+		case 1:
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y, main_character.ubi_model.z - 14.0f));
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 
-	mapa[1] = glm::vec3(-14.0f, -8.0f, -49.0f);
-	mapa[2] = glm::vec3(132.0f, -107.0f, 1.0f);
-	mapa[3] = glm::vec3(45.0f, -182.0f, -3.0f);
-	mapa[4] = glm::vec3(-130.0f, -145.0f, -3.0f);
-	mapa[5] = glm::vec3(-52.0f, -141.0f, -3.0f);
-	mapa[6] = glm::vec3(124.0f, -40.0f, -9.0f);
-	mapa[7] = glm::vec3(47.0f, -30.0f, -9.0f);
-	mapa[8] = glm::vec3(134.0f, -180.0f, 1.0f);
-	mapa[9] = glm::vec3(138.0f, -256.0f, -89.0f);
-	mapa[10] = glm::vec3(134.0f, -256.0f, -1.0f);
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+			Luffy.RenderModel();
+			break;
 
-	return mapa;
+		case 2:
+			// Aqui va las casilla 2 y asi consecutivamente
+			break;
+		
+		default:
+			break;
+		}
+	}
 }
 
 
@@ -309,29 +294,24 @@ int main()
 
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
-	brickTexture = Texture("Textures/brick.png");
-	brickTexture.LoadTextureA();
-	dirtTexture = Texture("Textures/dirt.png");
-	dirtTexture.LoadTextureA();
-	plainTexture = Texture("Textures/plain.png");
-	plainTexture.LoadTextureA();
+	// +++++++++++++++++++++++++++++++++Texturas+++++++++++++++++++++++++++++++
 	pisoTexture = Texture("Textures/monopoly.tga");
 	pisoTexture.LoadTextureA();
-	AgaveTexture = Texture("Textures/Agave.tga");
-	AgaveTexture.LoadTextureA();
 	dadoTexture = Texture("Textures/dado10caras.png");
 	dadoTexture.LoadTextureA();
 
-	Kitt_M = Model();
-	Kitt_M.LoadModel("Models/kitt_optimizado.obj");
-	Llanta_M = Model();
-	Llanta_M.LoadModel("Models/llanta_optimizada.obj");
-	Copter = Model();
-	Copter.LoadModel("Models/cop.obj");
-	Helices = Model();
+	// +++++++++++++++++++++++++++++++ Modelos ++++++++++++++++++++++++++++++++
+	main_character.LoadModel("Models/cho_000.obj");
+	main_character.load_animation_parameters(MAIN_DISTANCE_CORNER, -0.7f, 180.0f, 0);
+	float mov_main_character = 0;
+
+	copter.LoadModel("Models/cop.obj");
+	copter.load_animation_parameters(VEHICLES_DISTANCE_CORNER, 0.0f, 90.0f, 2);
+
 	Helices.LoadModel("Models/helices.obj");
+	Luffy.LoadModel("Models/Luffy.obj");
 
-
+	// +++++++++++++++++++++++++skybox+++++++++++++++++++++++++++++++++++++++++
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_rt.tga");
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_lf.tga");
@@ -346,13 +326,13 @@ int main()
 	Material_opaco = Material(0.3f, 4);
 
 
-	//luz direccional, sólo 1 y siempre debe de existir
+	//luz direccional, sï¿½lo 1 y siempre debe de existir
 	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
 		0.3f, 0.3f,
 		0.0f, 0.0f, -1.0f);
 	//contador de luces puntuales
 	unsigned int pointLightCount = 0;
-	//Declaración de primer luz puntual
+	//Declaraciï¿½n de primer luz puntual
 	pointLights[0] = PointLight(1.0f, 0.0f, 0.0f,
 		0.0f, 1.0f,
 		-6.0f, 1.5f, 1.5f,
@@ -386,28 +366,23 @@ int main()
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
 	movOffset = 0.3f;
 
-	movHelicoptero = 0.0f;
-	movDado = 0.0f;
+	//++++++++++++++++Info Main Character+++++++++++++++	
 
-	float esp_rota = 90.0f;
-	float hel_rota = 0.0f;
+	Package_Info_Main_Character info_main_character;
+	info_main_character.n_casillas = 0;
+	info_main_character.current_casilla = 0;
+	info_main_character.real_distance = 0;
+	info_main_character.meta_casilla = 0;
 
-	float distancia_heli = 100.0f;
-	float limit_c = 200.0f; //ToDo: este es el doble que distancia pero hay que ver porque y poner que no sea hardcode, si no calculado
-
-	int n_corner = 0;
-	Ubicacion ubi_helicoptero;
-	ubi_helicoptero.x = distancia_heli;
-	ubi_helicoptero.y = 5.0f;
-	ubi_helicoptero.z = distancia_heli;
-
-
-	bool tirando_dado = false;
-	float altura_dado = 15.0f;
-
-	std::map<int, glm::vec3> rot_dado;
-	rot_dado = crear_rotaciones_dado();
-	glm::vec3 rotacion_dado = {0.0f, 0.0f, 0.0f};
+	//Estado
+	int state_main_movement = STATE_REPOSO;
+	
+	//++++++++++++++Dado++++++++++++++++++++++++++++++++
+	Package_Info_Dado info_dado;
+	info_dado.movDado = 0.0f;
+	info_dado.rotacion_dado = { 0.0f, 0.0f, 0.0f };
+	info_dado.map_rotaciones = crear_rotaciones_dado();
+	info_dado.altura_dado = 15.0f;
 
 	std::srand(static_cast<unsigned int>(std::time(0)));
 
@@ -438,7 +413,7 @@ int main()
 		uniformEyePosition = shaderList[0].GetEyePositionLocation();
 		uniformColor = shaderList[0].getColorLocation();
 
-		//información en el shader de intensidad especular y brillo
+		//informaciï¿½n en el shader de intensidad especular y brillo
 		uniformSpecularIntensity = shaderList[0].GetSpecularIntensityLocation();
 		uniformShininess = shaderList[0].GetShininessLocation();
 
@@ -446,19 +421,22 @@ int main()
 		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
 		glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
 
-		// luz ligada a la cámara de tipo flash
-		//sirve para que en tiempo de ejecución (dentro del while) se cambien propiedades de la luz
+		// luz ligada a la cï¿½mara de tipo flash
+		//sirve para que en tiempo de ejecuciï¿½n (dentro del while) se cambien propiedades de la luz
 		glm::vec3 lowerLight = camera.getCameraPosition();
 		lowerLight.y -= 0.3f;
 		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
 
-		//información al shader de fuentes de iluminación
+		//informaciï¿½n al shader de fuentes de iluminaciï¿½n
 		shaderList[0].SetDirectionalLight(&mainLight);
 		shaderList[0].SetPointLights(pointLights, pointLightCount);
 		shaderList[0].SetSpotLights(spotLights, spotLightCount);
 
+
+		//INICIO DE CREACION DE MODELOS
+		
+		//Piso
 		glm::mat4 model(1.0);
-		glm::mat4 modelaux(1.0);
 		glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 
 		model = glm::mat4(1.0);
@@ -469,117 +447,64 @@ int main()
 
 		pisoTexture.UseTexture();
 		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-
 		meshList[2]->RenderMesh();
 
-		movHelicoptero += movOffset * deltaTime;
+
+		//Helicoptero Rodrigo
+		copter.set_move(movOffset * deltaTime);
 		
-		//Helicoptero
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(ubi_helicoptero.x, ubi_helicoptero.y, ubi_helicoptero.z));
-		model = glm::rotate(model, glm::radians(hel_rota), glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::translate(model, glm::vec3(-movHelicoptero, 0.0f, 0.0f));
-
-		glm::vec3 position = glm::vec3(model[3]);
-		float posX = position.x;
+		model = glm::translate(model, glm::vec3(copter.ubi_model.x, copter.ubi_model.y, copter.ubi_model.z));
+		model = glm::rotate(model, glm::radians(copter.current_rotate), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(-copter.mov_model, 0.0f, 0.0f));
 		
-		if (movHelicoptero >= limit_c) {
-
-			movHelicoptero = 0;
-			hel_rota = hel_rota - esp_rota;
-
-			switch (n_corner) {
-				case 0:
-					ubi_helicoptero.x = -ubi_helicoptero.x;
-					break;
-
-				case 1:
-					ubi_helicoptero.z = -ubi_helicoptero.z;
-					break;
-
-				case 2:
-					ubi_helicoptero.x = -ubi_helicoptero.x;
-					break;
-
-				case 3:
-					ubi_helicoptero.z = -ubi_helicoptero.z;
-					break;
-			}
-			n_corner++;
-
-			if (n_corner >= 4)
-				n_corner = 0;
-		}
-
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Copter.RenderModel();
+		copter.RenderModel();
 
-		modelaux = model;
-		float heli = movHelicoptero * 10;
+		float heli = copter.mov_model * 10;
 		model = glm::translate(model, glm::vec3(1.0f, 2.6f, 0.0f));
 		model = glm::rotate(model, glm::radians(heli), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Helices.RenderModel();
 
-		//movimiento dado
-		
-		if (mainWindow.get_tirar_dado()) {
-			if (!tirando_dado) {
-				tirando_dado = true;
-				mainWindow.reset_tirar_dado();
-				movDado = 0.0f;
-				rotacion_dado = { 0.0f, 0.0f, 0.0f };
-			}
-			else {
-				mainWindow.reset_tirar_dado();
-			}
 
-		}
+		manage_ejecutando_tirada(state_main_movement, &main_character, &info_main_character);
+
+		//Main model Tony Tony Chopper
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z));
+		model = glm::rotate(model, glm::radians(main_character.current_rotate), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, main_character.mov_model));
+		model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		main_character.RenderModel();
 
 		//Dado
+		//Revisar si se presiono la tecla T para tirar el dado
+		manage_get_tirada_dado(&mainWindow, state_main_movement, &info_dado);
+
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(0.0f, altura_dado + movDado, 0.0f));
-		model = glm::rotate(model, glm::radians(rotacion_dado.x), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(rotacion_dado.y), glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(rotacion_dado.z), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::translate(model, glm::vec3(0.0f, info_dado.altura_dado + info_dado.movDado, 0.0f));
+		model = glm::rotate(model, glm::radians(info_dado.rotacion_dado.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(info_dado.rotacion_dado.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(info_dado.rotacion_dado.z), glm::vec3(0.0f, 0.0f, 1.0f));
 		
-		float positionY = model[3][1];
+		//Aqui se maneja la animacion del dado
+		info_dado.pos_y = model[3][1];
+		manage_tirando_dado(state_main_movement, &main_character, &info_dado, &info_main_character, movOffset * deltaTime);
 
-		if (tirando_dado) {
-			movDado -= movOffset * deltaTime;
-
-			if (positionY <= 0.2f) {
-				tirando_dado = false;
-				int num_aleat = (std::rand() % 10 + 1);
-
-				rotacion_dado = rot_dado[num_aleat];
-			}
-		}
-
-		
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		dadoTexture.UseTexture();
 		meshList[4]->RenderMesh();
 
-		//Agave ¿qué sucede si lo renderizan antes del coche y el helicóptero?
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(10.0f, 1.0f, -14.0f));
-		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//Revisar casilla y modelar personaje en turno
+		render_current_model(state_main_movement, info_main_character.current_casilla, uniformModel);
 
-		//blending: transparencia o traslucidez
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		AgaveTexture.UseTexture();
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		meshList[3]->RenderMesh();
-		glDisable(GL_BLEND);
-
+		//Fin
 		glUseProgram(0);
-
 		mainWindow.swapBuffers();
 	}
 
 	return 0;
 }
-

@@ -1,12 +1,19 @@
-#pragma once
+#ifndef MODEL_H
+#define MODEL_H
+
 #include <vector>
-#include<string>
-#include<assimp/Importer.hpp>
-#include<assimp/scene.h>
-#include<assimp/postprocess.h>
+#include <string>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
+#include <glm.hpp>
+#include <gtc\matrix_transform.hpp>
+#include <gtc\type_ptr.hpp>
 
 #include "Mesh.h"
 #include "Texture.h"
+#include "CommonValues.h"
 
 class Model
 {
@@ -20,7 +27,7 @@ public:
 	~Model();
 
 private:
-	void LoadNode(aiNode* node, const aiScene* scene); //assimp
+	void LoadNode(aiNode* node, const aiScene* scene);
 	void LoadMesh(aiMesh* mesh, const aiScene* scene);
 	void LoadMaterials(const aiScene* scene);
 	std::vector<Mesh*>MeshList;
@@ -28,3 +35,25 @@ private:
 	std::vector<unsigned int>meshTotex;
 };
 
+class ModelSquareMovement : public Model {
+
+public:
+	void load_animation_parameters(float distance_corner, float altura, float initial_rotate, int initial_corner);
+	void set_move(float mov);
+
+	Ubicacion ubi_model;
+	float current_rotate;
+	float mov_model;
+	float mov_model_since_tirada;
+	float mov_model_total;
+	int num_turn;
+
+private:
+	float distance;
+	float addition_rotate;
+	float movement_limit;
+	int side;
+
+};
+
+#endif
