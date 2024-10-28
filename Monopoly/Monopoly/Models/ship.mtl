@@ -1,7 +1,7 @@
 # Blender 4.2.1 LTS MTL File: 'None'
 # www.blender.org
 
-newmtl surface_000
+newmtl surface_000.002
 Ns 8.000002
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -11,7 +11,7 @@ d 1.000000
 illum 2
 map_Kd 002.png
 
-newmtl surface_001
+newmtl surface_001.002
 Ns 8.000002
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -21,7 +21,7 @@ d 1.000000
 illum 2
 map_Kd 004.png
 
-newmtl surface_002
+newmtl surface_002.002
 Ns 8.000002
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -31,7 +31,7 @@ d 1.000000
 illum 2
 map_Kd 007.png
 
-newmtl surface_003
+newmtl surface_003.002
 Ns 8.000002
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -41,7 +41,7 @@ d 1.000000
 illum 2
 map_Kd 006.png
 
-newmtl surface_004
+newmtl surface_004.002
 Ns 8.000002
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -51,7 +51,7 @@ d 1.000000
 illum 2
 map_Kd 005.png
 
-newmtl surface_005
+newmtl surface_005.002
 Ns 8.000002
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -61,7 +61,7 @@ d 1.000000
 illum 2
 map_Kd 003.png
 
-newmtl surface_006
+newmtl surface_006.002
 Ns 8.000002
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -71,7 +71,7 @@ d 1.000000
 illum 2
 map_Kd 001.png
 
-newmtl surface_007
+newmtl surface_007.002
 Ns 8.000002
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -81,7 +81,7 @@ d 1.000000
 illum 2
 map_Kd 008.png
 
-newmtl surface_008
+newmtl surface_008.002
 Ns 8.000002
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
