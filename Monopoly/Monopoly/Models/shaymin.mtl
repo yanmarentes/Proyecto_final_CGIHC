@@ -1,0 +1,42 @@
+# Blender 4.2.1 LTS MTL File: 'None'
+# www.blender.org
+
+newmtl BodyA
+Ns 19.999990
+Ka 1.000000 1.000000 1.000000
+Ks 0.175163 0.175163 0.175163
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Shaymin_bodyCl_ctr.png
+
+newmtl BodyB
+Ns 19.999990
+Ka 1.000000 1.000000 1.000000
+Ks 0.175163 0.175163 0.175163
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Shaymin_bodyCl_ctr.png
+
+newmtl Eye
+Ns 19.999990
+Ka 1.000000 1.000000 1.000000
+Ks 0.175163 0.175163 0.175163
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Shaymin_eyeCl_ctr.png
+
+newmtl Mouth
+Ns 19.999990
+Ka 1.000000 1.000000 1.000000
+Ks 0.175163 0.175163 0.175163
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Shaymin_mouthCl_ctr.png

@@ -1,0 +1,14 @@
+# Blender 4.2.1 LTS MTL File: 'None'
+# www.blender.org
+
+newmtl base_material.001
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd a117c0bfdb79_house_with_green_ro_texture_kd.jpg
+map_Ns a117c0bfdb79_house_with_green_ro_roughness.jpg
+map_refl a117c0bfdb79_house_with_green_ro_metallic.jpg
+map_Bump -bm 1.000000 a117c0bfdb79_house_with_green_ro_normals.jpg
