@@ -69,7 +69,6 @@ Model zoro;
 Model nami;
 Model moby_dick;
 Model laboon;
-Model brook;
 Model hito;
 Model gomu;
 Model ope;
@@ -110,7 +109,9 @@ GLfloat lastTime = 0.0f;
 static double limitFPS = 1.0 / 60.0;
 
 // luz direccional
-DirectionalLight mainLight;
+DirectionalLight main_light_noche;
+DirectionalLight main_light_dia;
+
 //para declarar varias luces de tipo pointlight
 PointLight pointLights[MAX_POINT_LIGHTS];
 SpotLight spotLights[MAX_SPOT_LIGHTS];
@@ -679,7 +680,6 @@ int main()
 	ship.LoadModel("Models/ship.obj");
 	zoro.LoadModel("Models/zoro.obj");
 	ace.LoadModel("Models/Ace.obj");
-	brook.LoadModel("Models/brook.obj");
 	mera.LoadModel("Models/Mera_mera.obj");
 	gomu.LoadModel("Models/gomu_gomu_no_mi.obj");
 	ope.LoadModel("Models/lawsfruit1.obj");
@@ -704,10 +704,14 @@ int main()
 	Material_opaco = Material(0.3f, 4);
 
 
-	//luz direccional, s�lo 1 y siempre debe de existir
-	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
+	//luz direccional, solo 1 y siempre debe de existir
+	main_light_noche = DirectionalLight(1.0f, 1.0f, 1.0f,
 		0.3f, 0.3f,
 		0.0f, 0.0f, -1.0f);
+	main_light_dia = DirectionalLight(1.0f, 0.9f, 0.9f,
+		0.5f, 0.5f,
+		0.0f, -1.0f, -0.5f);
+
 	//contador de luces puntuales
 	unsigned int pointLightCount = 0;
 	//Declaraci�n de primer luz puntual
@@ -817,8 +821,12 @@ int main()
 		lowerLight.y -= 0.3f;
 		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
 
-		//informaci�n al shader de fuentes de iluminaci�n
-		shaderList[0].SetDirectionalLight(&mainLight);
+		//informacion al shader de fuentes de iluminaci�n
+		if (dia)
+			shaderList[0].SetDirectionalLight(&main_light_dia);
+		else
+			shaderList[0].SetDirectionalLight(&main_light_noche);
+
 		shaderList[0].SetPointLights(pointLights, pointLightCount);
 		shaderList[0].SetSpotLights(spotLights, spotLightCount);
 
