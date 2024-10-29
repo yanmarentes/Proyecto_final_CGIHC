@@ -50,6 +50,10 @@ Texture piso_texture_noche;
 Texture dadoTexture;
 
 ModelSquareMovement main_character;
+Model main_brazo_derecho;
+Model main_brazo_izquierdo;
+Model main_pierna_derecha;
+Model main_pierna_izquierda;
 ModelSquareMovement copter;
 Model Helices;
 Model Luffy;
@@ -304,9 +308,14 @@ int main()
 	dadoTexture.LoadTextureA();
 
 	// +++++++++++++++++++++++++++++++ Modelos ++++++++++++++++++++++++++++++++
-	main_character.LoadModel("Models/cho_000.obj");
+	main_character.LoadModel("Models/chopper_sin_extremidades.obj");
 	main_character.load_animation_parameters(MAIN_DISTANCE_CORNER, -0.7f, 180.0f, 0);
 	float mov_main_character = 0;
+
+	main_brazo_derecho.LoadModel("Models/chopper_brazo_derecho.obj");
+	main_brazo_izquierdo.LoadModel("Models/chopper_brazo_izquierdo.obj");
+	main_pierna_derecha.LoadModel("Models/chopper_pata_derecha.obj");
+	main_pierna_izquierda.LoadModel("Models/chopper_pata_izquierda.obj");
 
 	copter.LoadModel("Models/cop.obj");
 	copter.load_animation_parameters(VEHICLES_DISTANCE_CORNER, 0.0f, 90.0f, 2);
@@ -376,6 +385,8 @@ int main()
 	info_main_character.current_casilla = 0;
 	info_main_character.real_distance = 0;
 	info_main_character.meta_casilla = 0;
+	info_main_character.mov_extremidades = 0.0f;
+	info_main_character.fordward_extremidad = true;
 
 	//Estado
 	int state_main_movement = STATE_REPOSO;
@@ -449,6 +460,7 @@ int main()
 		
 		//Piso
 		glm::mat4 model(1.0);
+		glm::mat4 model_aux(1.0);
 		glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 
 		model = glm::mat4(1.0);
@@ -495,6 +507,31 @@ int main()
 		model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		main_character.RenderModel();
+
+		model_aux = model;
+		model = glm::translate(model, glm::vec3(-0.6f, 1.3f, 0.0f));
+		model = glm::rotate(model, glm::radians(info_main_character.mov_extremidades), glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		main_pierna_derecha.RenderModel();
+
+		model = model_aux;
+		model = glm::translate(model, glm::vec3(0.6f, 1.3f, 0.0f));
+		model = glm::rotate(model, glm::radians(-info_main_character.mov_extremidades), glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		main_pierna_izquierda.RenderModel();
+
+		model = model_aux;
+		model = glm::translate(model, glm::vec3(-0.9f, 4.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(-info_main_character.mov_extremidades), glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		main_brazo_derecho.RenderModel();
+
+		model = model_aux;
+		model = glm::translate(model, glm::vec3(0.9f, 4.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(info_main_character.mov_extremidades), glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		main_brazo_izquierdo.RenderModel();
+
 
 		//Dado
 		//Revisar si se presiono la tecla T para tirar el dado

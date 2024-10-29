@@ -20,6 +20,8 @@ struct Package_Info_Main_Character {
 	int current_casilla;
 	float real_distance;
 	int meta_casilla;
+	float mov_extremidades;
+	bool fordward_extremidad;
 };
 
 //float distancia_entre_casillas(int cantidad_dado, int& position_initial, ModelSquareMovement* main_character, int& meta_casilla);
