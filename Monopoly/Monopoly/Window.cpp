@@ -109,34 +109,30 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	}
 
-	/*if (key == GLFW_KEY_F)
+	if (key == GLFW_KEY_V)
 	{
 		theWindow->rotx -= 1.0;
 	}
-	if (key == GLFW_KEY_G)
+	if (key == GLFW_KEY_B)
 	{
 		theWindow->roty -= 1.0;
 	}
-	if (key == GLFW_KEY_H)
+	if (key == GLFW_KEY_N)
 	{
 		theWindow->rotz -= 1.0;
 	}
-	if (key == GLFW_KEY_R)
+	if (key == GLFW_KEY_F)
 	{
 		theWindow->rotx += 1.0;
 	}
-	if (key == GLFW_KEY_T)
+	if (key == GLFW_KEY_G)
 	{
 		theWindow->roty += 1.0;
 	}
-	if (key == GLFW_KEY_Y)
+	if (key == GLFW_KEY_H)
 	{
 		theWindow->rotz += 1.0;
 	}
-	if (key == GLFW_KEY_Y)
-	{
-		theWindow->rotz += 1.0;
-	}*/
 
 	if (key == GLFW_KEY_T && action == GLFW_PRESS)
 	{

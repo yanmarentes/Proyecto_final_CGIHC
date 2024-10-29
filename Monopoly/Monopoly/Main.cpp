@@ -291,6 +291,8 @@ void CrearDado()
 
 	meshList.push_back(dado);
 
+	
+
 }
 
 
@@ -964,6 +966,23 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		dadoTexture.UseTexture();
 		meshList[4]->RenderMesh();
+
+		float avr_x = mainWindow.getrotx();		
+		float avr_y = mainWindow.getroty();
+		float avr_z = mainWindow.getrotz();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(10.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(avr_x), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(avr_y), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(avr_z), glm::vec3(0.0f, 0.0f, 1.0f));
+		//model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		dadoTexture.UseTexture();
+		meshList[5]->RenderMesh();
+
+
 
 		//Revisar casilla y modelar personaje en turno
 		render_current_model(state_main_movement, info_main_character.current_casilla, uniformModel, modelstate);
