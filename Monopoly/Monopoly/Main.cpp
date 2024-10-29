@@ -303,7 +303,40 @@ void CreateShaders()
 **
 **
 */
-void render_current_model(int state_main_movement, int current_casilla, GLuint &uniformModel) {
+void render_current_model(int state_main_movement, int current_casilla, GLuint &uniformModel, int &modelstate) {
+	
+	//Movimiento del modelo en turno
+	switch (modelstate) {
+	case 0: //reset
+		modelPosY = -10.0f;
+		modelstate = 1;
+		break;
+	case 1: // Subiendo
+		modelPosY += modelSpeed * deltaTime;
+		if (modelPosY >= 3.0f) {
+			modelPosY = 3.0f;
+			modelstate = 2; // Cambia a girando hacia arriba
+		}
+		break;
+	case 2: // Girando hacia arriba
+		modelRotation += 45.0f * (deltaTime / 8); // 360 grados por segundo
+		if (modelRotation >= 360.0f) {
+			modelRotation = 0.0f;
+			modelstate = 3; // Regresa a bajando
+		}
+		break;
+	case 3: // Bajando
+		modelPosY -= modelSpeed * deltaTime;
+		if (modelPosY <= -10.0f) {
+			modelPosY += 0.1f;
+			modelstate = 4; // Cambia a girando hacia abajo
+		}
+		break;
+	case 4: // Reposo
+		modelPosY = -10.0f;
+		break;
+	}
+
 	if (state_main_movement == STATE_REPOSO) {
 		glm::mat4 model(1.0);
 
@@ -886,39 +919,7 @@ int main()
 		meshList[4]->RenderMesh();
 
 		//Revisar casilla y modelar personaje en turno
-		render_current_model(state_main_movement, info_main_character.current_casilla, uniformModel);
-
-		//Movimiento del modelo en turno
-		switch (modelstate) {
-		case 0: //reset
-			modelPosY = -10.0f;
-			modelstate = 1;
-			break;
-		case 1: // Subiendo
-			modelPosY += modelSpeed * deltaTime;
-			if (modelPosY >= 3.0f) {
-				modelPosY = 3.0f;
-				modelstate = 2; // Cambia a girando hacia arriba
-			}
-			break;
-		case 2: // Girando hacia arriba
-			modelRotation += 45.0f * (deltaTime / 8); // 360 grados por segundo
-			if (modelRotation >= 360.0f) {
-				modelRotation = 0.0f;
-				modelstate = 3; // Regresa a bajando
-			}
-			break;
-		case 3: // Bajando
-			modelPosY -= modelSpeed * deltaTime;
-			if (modelPosY <= -10.0f) {
-				modelPosY += 0.1f;
-				modelstate = 4; // Cambia a girando hacia abajo
-			}
-			break;
-		case 4: // Reposo
-			modelPosY = -10.0f;
-			break;
-		}
+		render_current_model(state_main_movement, info_main_character.current_casilla, uniformModel, modelstate);
 
 		//Fin
 		glUseProgram(0);
