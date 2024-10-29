@@ -63,8 +63,22 @@ void manage_ejecutando_tirada(int &state_main_movement, ModelSquareMovement* mai
 			state_main_movement = STATE_REPOSO;
 			modelstate = 0;
 		}
-
+		
 		main_character->set_move(0.01);
+
+
+		if (info_main_character->fordward_extremidad) {
+			info_main_character->mov_extremidades += 0.15;
+
+			if (info_main_character->mov_extremidades >= 45.0f)
+				info_main_character->fordward_extremidad = false;
+		}
+		else {
+			info_main_character->mov_extremidades -= 0.15;
+
+			if (info_main_character->mov_extremidades <= -45.0f)
+				info_main_character->fordward_extremidad = true;
+		}
 	}
 }
 
