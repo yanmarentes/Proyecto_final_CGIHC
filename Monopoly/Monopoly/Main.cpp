@@ -59,6 +59,8 @@ Model main_pierna_derecha;
 Model main_pierna_izquierda;
 ModelSquareMovement copter;
 Model Helices;
+ModelSquareMovement Barco;
+Model Rueda_barco;
 
 //One piece
 Model Luffy;
@@ -655,8 +657,12 @@ int main()
 
 	copter.LoadModel("Models/cop.obj");
 	copter.load_animation_parameters(VEHICLES_DISTANCE_CORNER, 0.0f, 90.0f, 2);
-
 	Helices.LoadModel("Models/helices.obj");
+
+	Barco.LoadModel("Models/barco.obj");
+	Barco.load_animation_parameters(VEHICLES_DISTANCE_CORNER, 0.0f, 90.0f, 0);
+	Rueda_barco.LoadModel("Models/rueda.obj");
+
 	Luffy.LoadModel("Models/Luffy.obj");
 	ark_maxim.LoadModel("Models/ark_maxim.obj");
 	baya_frambu.LoadModel("Models/baya_frambu.obj");
@@ -871,6 +877,33 @@ int main()
 		model = glm::rotate(model, glm::radians(heli), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Helices.RenderModel();
+
+		//Barco Emir
+		Barco.set_move(movOffset * deltaTime);
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(Barco.ubi_model.x, Barco.ubi_model.y, Barco.ubi_model.z));
+		model = glm::rotate(model, glm::radians(Barco.current_rotate), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(Barco.mov_model, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Barco.RenderModel();
+
+		model_aux = model;
+
+		float mov_rueda = Barco.mov_model * -10;
+		model = glm::translate(model, glm::vec3(-19.0f, 5.0f, 12.0f));
+		model = glm::rotate(model, glm::radians(mov_rueda), glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Rueda_barco.RenderModel();
+
+		model = model_aux;
+
+		model = glm::translate(model, glm::vec3(-19.0f, 5.0f, -12.0f));
+		model = glm::rotate(model, glm::radians(mov_rueda), glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Rueda_barco.RenderModel();
 
 
 		manage_ejecutando_tirada(state_main_movement, &main_character, &info_main_character, modelstate, deltaTime);
