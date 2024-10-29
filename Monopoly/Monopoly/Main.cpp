@@ -863,7 +863,7 @@ int main()
 		Helices.RenderModel();
 
 
-		manage_ejecutando_tirada(state_main_movement, &main_character, &info_main_character, modelstate);
+		manage_ejecutando_tirada(state_main_movement, &main_character, &info_main_character, modelstate, deltaTime);
 
 		//Main model Tony Tony Chopper
 

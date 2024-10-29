@@ -54,7 +54,7 @@ void manage_tirando_dado(int &state_main_movement, ModelSquareMovement* main_cha
 	}
 }
 
-void manage_ejecutando_tirada(int &state_main_movement, ModelSquareMovement* main_character, Package_Info_Main_Character* info_main_character, int &modelstate) {
+void manage_ejecutando_tirada(int &state_main_movement, ModelSquareMovement* main_character, Package_Info_Main_Character* info_main_character, int &modelstate, GLfloat delta_time) {
 	if (state_main_movement == STATE_EJECUTANDO_TIRADA_DADO) {
 		if (main_character->mov_model_total >= info_main_character->real_distance) {
 			main_character->mov_model_since_tirada = 0.0f;
@@ -64,17 +64,17 @@ void manage_ejecutando_tirada(int &state_main_movement, ModelSquareMovement* mai
 			modelstate = 0;
 		}
 		
-		main_character->set_move(0.01);
+		main_character->set_move(0.1 * delta_time);
 
 
 		if (info_main_character->fordward_extremidad) {
-			info_main_character->mov_extremidades += 0.15;
+			info_main_character->mov_extremidades += (3.0 * delta_time);
 
 			if (info_main_character->mov_extremidades >= 45.0f)
 				info_main_character->fordward_extremidad = false;
 		}
 		else {
-			info_main_character->mov_extremidades -= 0.15;
+			info_main_character->mov_extremidades -= (3.0 * delta_time);
 
 			if (info_main_character->mov_extremidades <= -45.0f)
 				info_main_character->fordward_extremidad = true;
