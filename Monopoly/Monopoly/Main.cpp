@@ -45,7 +45,8 @@ std::vector<Shader> shaderList;
 
 Camera camera;
 
-Texture pisoTexture;
+Texture piso_texture_dia;
+Texture piso_texture_noche;
 Texture dadoTexture;
 
 ModelSquareMovement main_character;
@@ -295,8 +296,10 @@ int main()
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
 	// +++++++++++++++++++++++++++++++++Texturas+++++++++++++++++++++++++++++++
-	pisoTexture = Texture("Textures/monopoly.tga");
-	pisoTexture.LoadTextureA();
+	piso_texture_dia = Texture("Textures/monopoly.tga");
+	piso_texture_dia.LoadTextureA();
+	piso_texture_noche = Texture("Textures/monopoly_noche.jpg");
+	piso_texture_noche.LoadTextureA();
 	dadoTexture = Texture("Textures/dado10caras.png");
 	dadoTexture.LoadTextureA();
 
@@ -388,6 +391,10 @@ int main()
 
 	glfwSetTime(0);
 
+	//++++++++++++++++++Dia y Noche+++++++++++++++++++++
+	GLfloat change_ambientacion = glfwGetTime() + SEGUNDOS_PARA_CAMBIAR_DIA_NOCHE;
+	bool dia = true;
+
 	////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose())
 	{
@@ -396,6 +403,11 @@ int main()
 		deltaTime = now - lastTime;
 		deltaTime += (now - lastTime) / limitFPS;
 		lastTime = now;
+
+		if (now >= change_ambientacion) {
+			dia = !dia;
+			change_ambientacion = now + SEGUNDOS_PARA_CAMBIAR_DIA_NOCHE;
+		}
 
 		//Recibir eventos del usuario
 		glfwPollEvents();
@@ -445,7 +457,11 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 
-		pisoTexture.UseTexture();
+		if (dia)
+			piso_texture_dia.UseTexture();
+		else
+			piso_texture_noche.UseTexture();
+
 		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		meshList[2]->RenderMesh();
 

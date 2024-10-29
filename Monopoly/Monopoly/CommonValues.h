@@ -7,6 +7,7 @@ const int MAX_SPOT_LIGHTS = 5;
 
 #define MAIN_DISTANCE_CORNER 67.5
 #define VEHICLES_DISTANCE_CORNER 100
+#define SEGUNDOS_PARA_CAMBIAR_DIA_NOCHE 30
 
 struct Ubicacion {
 	float x;
