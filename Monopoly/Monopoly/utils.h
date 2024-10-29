@@ -9,10 +9,13 @@
 
 struct Package_Info_Dado {
 	float movDado;
+	float mov_dado_side;
 	float pos_y;
+	float pos_side;
 	glm::vec3 rotacion_dado;
 	std::map<int, glm::vec3> map_rotaciones;
 	float altura_dado;
+	float side_limit;
 };
 
 struct Package_Info_Main_Character {

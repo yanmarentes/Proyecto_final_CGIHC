@@ -30,6 +30,7 @@ void manage_get_tirada_dado(Window* mainWindow, int &state_main_movement, Packag
 			state_main_movement = STATE_TIRANDO_DADO;
 			mainWindow->reset_tirar_dado();
 			info_dado->movDado = 0.0f;
+			info_dado->mov_dado_side = 0.0f;
 			info_dado->rotacion_dado = { 0.0f, 0.0f, 0.0f };
 		}
 		else {
@@ -41,16 +42,23 @@ void manage_get_tirada_dado(Window* mainWindow, int &state_main_movement, Packag
 void manage_tirando_dado(int &state_main_movement, ModelSquareMovement* main_character, Package_Info_Dado* info_dado, Package_Info_Main_Character* info_main_character, float sum_mov_dado) {
 	if (state_main_movement == STATE_TIRANDO_DADO) {
 
-		info_dado->movDado -= sum_mov_dado;
-
-		if (info_dado->pos_y <= 0.2f) {
-			int num_aleat = (std::rand() % 10 + 1);
-
-			info_dado->rotacion_dado = info_dado->map_rotaciones[num_aleat];
-			int n_casillas = num_aleat;
-			info_main_character->real_distance = distancia_entre_casillas(n_casillas, info_main_character->current_casilla, main_character, info_main_character->meta_casilla);
-			state_main_movement = STATE_EJECUTANDO_TIRADA_DADO;
+		if (info_dado->pos_y > 0.8f) {
+			info_dado->movDado -= sum_mov_dado;
 		}
+		else {
+			if (info_dado->pos_side < info_dado->side_limit)
+				info_dado->mov_dado_side += sum_mov_dado;
+			else
+				state_main_movement = STATE_DADO_SACANDO_NUMERO_ALEATORIO;
+		}
+	} 
+	else if (state_main_movement == STATE_DADO_SACANDO_NUMERO_ALEATORIO) {
+		int num_aleat = (std::rand() % 10 + 1);
+
+		info_dado->rotacion_dado = info_dado->map_rotaciones[num_aleat];
+		int n_casillas = num_aleat;
+		info_main_character->real_distance = distancia_entre_casillas(n_casillas, info_main_character->current_casilla, main_character, info_main_character->meta_casilla);
+		state_main_movement = STATE_EJECUTANDO_TIRADA_DADO;
 	}
 }
 

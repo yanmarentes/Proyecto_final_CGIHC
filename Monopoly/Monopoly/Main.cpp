@@ -765,9 +765,11 @@ int main()
 	//++++++++++++++Dado++++++++++++++++++++++++++++++++
 	Package_Info_Dado info_dado;
 	info_dado.movDado = 0.0f;
+	info_dado.mov_dado_side = 0.0f;
 	info_dado.rotacion_dado = { 0.0f, 0.0f, 0.0f };
 	info_dado.map_rotaciones = crear_rotaciones_dado();
-	info_dado.altura_dado = 15.0f;
+	info_dado.altura_dado = 35.0f;
+	info_dado.side_limit = 30.0f;
 
 	std::srand(static_cast<unsigned int>(std::time(0)));
 
@@ -913,13 +915,17 @@ int main()
 		manage_get_tirada_dado(&mainWindow, state_main_movement, &info_dado);
 
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(0.0f, info_dado.altura_dado + info_dado.movDado, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, info_dado.altura_dado + info_dado.movDado, info_dado.mov_dado_side));
+		if (state_main_movement == STATE_TIRANDO_DADO)
+			model = glm::rotate(model, glm::radians((info_dado.movDado + info_dado.mov_dado_side) * 20.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 		model = glm::rotate(model, glm::radians(info_dado.rotacion_dado.x), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(info_dado.rotacion_dado.y), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(info_dado.rotacion_dado.z), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 		
 		//Aqui se maneja la animacion del dado
 		info_dado.pos_y = model[3][1];
+		info_dado.pos_side = model[3][2];
 		manage_tirando_dado(state_main_movement, &main_character, &info_dado, &info_main_character, movOffset * deltaTime);
 
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
