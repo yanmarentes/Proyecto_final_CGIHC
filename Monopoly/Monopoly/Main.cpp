@@ -731,16 +731,16 @@ int main()
 
 	unsigned int spotLightCount = 0;
 	//linterna
-	spotLights[0] = SpotLight(1.0f, 1.0f, 1.0f,
+	/*spotLights[0] = SpotLight(1.0f, 1.0f, 1.0f,
 		0.0f, 2.0f,
 		0.0f, 0.0f, 0.0f,
 		0.0f, -1.0f, 0.0f,
 		1.0f, 0.0f, 0.0f,
 		5.0f);
-	spotLightCount++;
+	spotLightCount++;*/
 
 	//luz fija
-	spotLights[1] = SpotLight(0.0f, 0.0f, 1.0f,
+	spotLights[0] = SpotLight(0.0f, 0.0f, 1.0f,
 		1.0f, 2.0f,
 		0.0f, 22.0f, 0.0f,
 		0.0f, -5.0f, 0.0f,
@@ -829,9 +829,9 @@ int main()
 
 		// luz ligada a la c�mara de tipo flash
 		//sirve para que en tiempo de ejecuci�n (dentro del while) se cambien propiedades de la luz
-		glm::vec3 lowerLight = camera.getCameraPosition();
-		lowerLight.y -= 0.3f;
-		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
+		//glm::vec3 lowerLight = camera.getCameraPosition();
+		//lowerLight.y -= 0.3f;
+		//spotLights[0].SetFlash(lowerLight, camera.getCameraDirection()); linterna
 
 		//informacion al shader de fuentes de iluminaci�n
 		if (dia)
@@ -839,7 +839,7 @@ int main()
 		else
 			shaderList[0].SetDirectionalLight(&main_light_noche);
 
-		shaderList[0].SetPointLights(pointLights, pointLightCount);
+		//shaderList[0].SetPointLights(pointLights, pointLightCount); linterna
 		shaderList[0].SetSpotLights(spotLights, spotLightCount);
 
 
