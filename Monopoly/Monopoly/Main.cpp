@@ -688,15 +688,16 @@ int main()
 	merry.LoadModel("Models/Going Merry.obj");
 	hito.LoadModel("Models/hito_hito.obj");
 
-
 	// +++++++++++++++++++++++++skybox+++++++++++++++++++++++++++++++++++++++++
 	std::vector<std::string> skyboxFaces;
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_rt.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_lf.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_dn.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_up.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_bk.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_ft.tga");
+	skyboxFaces.push_back("Textures/Skybox/dia/posz.jpg");
+	skyboxFaces.push_back("Textures/Skybox/dia/negz.jpg");
+	
+	skyboxFaces.push_back("Textures/Skybox/dia/negy.jpg");
+	skyboxFaces.push_back("Textures/Skybox/dia/posy.jpg");
+	skyboxFaces.push_back("Textures/Skybox/dia/negx.jpg");
+	skyboxFaces.push_back("Textures/Skybox/dia/posx.jpg");
+	
 
 	skybox = Skybox(skyboxFaces);
 
