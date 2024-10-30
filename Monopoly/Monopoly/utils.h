@@ -12,8 +12,10 @@ struct Package_Info_Dado {
 	float mov_dado_side;
 	float pos_y;
 	float pos_side;
-	glm::vec3 rotacion_dado;
-	std::map<int, glm::vec3> map_rotaciones;
+	glm::vec3 rotacion_dado_8;
+	glm::vec3 rotacion_dado_4;
+	std::map<int, glm::vec3> map_rotaciones_8;
+	std::map<int, glm::vec3> map_rotaciones_4;
 	float altura_dado;
 	float side_limit;
 };
@@ -32,5 +34,7 @@ void manage_get_tirada_dado(Window* mainWindow, int& state_main_movement, Packag
 void manage_tirando_dado(int& state_main_movement, ModelSquareMovement* main_character, Package_Info_Dado* info_dado, Package_Info_Main_Character* info_main_character, float sum_mov_dado);
 void manage_ejecutando_tirada(int& state_main_movement, ModelSquareMovement* main_character, Package_Info_Main_Character* info_main_character, int& modelstate, GLfloat delta_time);
 std::map<int, glm::vec3> crear_rotaciones_dado();
+std::map<int, glm::vec3> crear_rotaciones_dado_8_caras();
+std::map<int, glm::vec3> crear_rotaciones_dado_4_caras();
 
 #endif

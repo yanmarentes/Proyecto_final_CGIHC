@@ -31,7 +31,8 @@ void manage_get_tirada_dado(Window* mainWindow, int &state_main_movement, Packag
 			mainWindow->reset_tirar_dado();
 			info_dado->movDado = 0.0f;
 			info_dado->mov_dado_side = 0.0f;
-			info_dado->rotacion_dado = { 0.0f, 0.0f, 0.0f };
+			info_dado->rotacion_dado_8 = { 0.0f, 0.0f, 0.0f };
+			info_dado->rotacion_dado_4 = { 0.0f, 0.0f, 0.0f };
 		}
 		else {
 			mainWindow->reset_tirar_dado();
@@ -42,7 +43,7 @@ void manage_get_tirada_dado(Window* mainWindow, int &state_main_movement, Packag
 void manage_tirando_dado(int &state_main_movement, ModelSquareMovement* main_character, Package_Info_Dado* info_dado, Package_Info_Main_Character* info_main_character, float sum_mov_dado) {
 	if (state_main_movement == STATE_TIRANDO_DADO) {
 
-		if (info_dado->pos_y > 0.8f) {
+		if (info_dado->pos_y > 1.4f) {
 			info_dado->movDado -= sum_mov_dado;
 		}
 		else {
@@ -53,11 +54,17 @@ void manage_tirando_dado(int &state_main_movement, ModelSquareMovement* main_cha
 		}
 	} 
 	else if (state_main_movement == STATE_DADO_SACANDO_NUMERO_ALEATORIO) {
-		int num_aleat = (std::rand() % 10 + 1);
 
-		info_dado->rotacion_dado = info_dado->map_rotaciones[num_aleat];
-		int n_casillas = num_aleat;
-		info_main_character->real_distance = distancia_entre_casillas(n_casillas, info_main_character->current_casilla, main_character, info_main_character->meta_casilla);
+		int sum_dados = 0;
+		int num_aleat = (std::rand() % 8 + 1);
+		sum_dados += num_aleat;
+		info_dado->rotacion_dado_8 = info_dado->map_rotaciones_8[num_aleat];
+
+		num_aleat = (std::rand() % 4 + 1);
+		sum_dados += num_aleat;
+		info_dado->rotacion_dado_4 = info_dado->map_rotaciones_4[num_aleat];
+
+		info_main_character->real_distance = distancia_entre_casillas(sum_dados, info_main_character->current_casilla, main_character, info_main_character->meta_casilla);
 		state_main_movement = STATE_EJECUTANDO_TIRADA_DADO;
 	}
 }
@@ -103,6 +110,32 @@ std::map<int, glm::vec3> crear_rotaciones_dado() {
 	mapa[8] = glm::vec3(134.0f, -180.0f, 1.0f);
 	mapa[9] = glm::vec3(138.0f, -256.0f, -89.0f);
 	mapa[10] = glm::vec3(134.0f, -256.0f, -1.0f);
+
+	return mapa;
+}
+
+std::map<int, glm::vec3> crear_rotaciones_dado_8_caras() {
+	std::map<int, glm::vec3> mapa;
+
+	mapa[1] = glm::vec3(36.0f, 5.0f, 132.0f);
+	mapa[2] = glm::vec3(53.0f, -46.0f, -2.0f);
+	mapa[3] = glm::vec3(80.0f, -127.0f, -148.0f);
+	mapa[4] = glm::vec3(36.0f, 7.0f, 40.0f);
+	mapa[5] = glm::vec3(-132.0f, 39.0f, 12.0f);
+	mapa[6] = glm::vec3(-34.0f, 2.0f, 48.0f);
+	mapa[7] = glm::vec3(57.0f, -46.0f, -86.0f);
+	mapa[8] = glm::vec3(-48.0f, -42.0f, -82.0f);
+
+	return mapa;
+}
+
+std::map<int, glm::vec3> crear_rotaciones_dado_4_caras() {
+	std::map<int, glm::vec3> mapa;
+
+	mapa[1] = glm::vec3(0.0f, 0.0f, 0.0f);
+	mapa[2] = glm::vec3(-112.0f, 60.0f, 0.0f);
+	mapa[3] = glm::vec3(-112.0f, 180.0f, 0.0f);
+	mapa[4] = glm::vec3(-112.0f, -60.0f, -2.0f);
 
 	return mapa;
 }
