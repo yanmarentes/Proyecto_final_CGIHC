@@ -150,6 +150,7 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="animatedmodel.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CommonValues.h" />
     <ClInclude Include="definition.h" />
@@ -158,6 +159,7 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="modelstructs.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Shader_light.h" />
     <ClInclude Include="Skybox.h" />
@@ -167,6 +169,49 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="Window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\01-simple.fs" />
+    <None Include="shaders\01-simple.vs" />
+    <None Include="shaders\02-simplePVM.fs" />
+    <None Include="shaders\02-simplePVM.vs" />
+    <None Include="shaders\09_fragment_skinning.fs" />
+    <None Include="shaders\09_vertex_skinning.vs" />
+    <None Include="shaders\10_fragment_cubemap.fs" />
+    <None Include="shaders\10_fragment_simple.fs" />
+    <None Include="shaders\10_fragment_simpleLights.fs" />
+    <None Include="shaders\10_fragment_skinning-IT.fs" />
+    <None Include="shaders\10_texturesPhong.fs" />
+    <None Include="shaders\10_texturesPhong.vs" />
+    <None Include="shaders\10_vertex_cubemap.vs" />
+    <None Include="shaders\10_vertex_simple.vs" />
+    <None Include="shaders\10_vertex_simpleLights.vs" />
+    <None Include="shaders\10_vertex_skinning-IT.vs" />
+    <None Include="shaders\11_BasicPhongShader.fs" />
+    <None Include="shaders\11_BasicPhongShader.vs" />
+    <None Include="shaders\11_Fresnel.fs" />
+    <None Include="shaders\11_Fresnel.vs" />
+    <None Include="shaders\11_PhongShaderMultLights.fs" />
+    <None Include="shaders\11_PhongShaderMultLights.vs" />
+    <None Include="shaders\11_texturesPhong2.fs" />
+    <None Include="shaders\11_texturesPhong2.vs" />
+    <None Include="shaders\12_ProceduralAnimation.fs" />
+    <None Include="shaders\12_ProceduralAnimation.vs" />
+    <None Include="shaders\13_particles.fs" />
+    <None Include="shaders\13_particles.vs" />
+    <None Include="shaders\13_wavesAnimation.fs" />
+    <None Include="shaders\13_wavesAnimation.vs" />
+    <None Include="shaders\14_mirror.fs" />
+    <None Include="shaders\14_mirror.vs" />
+    <None Include="shaders\15_picking.fs" />
+    <None Include="shaders\15_picking.vs" />
+    <None Include="shaders\shader_light.frag" />
+    <None Include="shaders\shader_light.vert" />
+    <None Include="shaders\skybox.frag" />
+    <None Include="shaders\skybox.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="shaders\readme.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

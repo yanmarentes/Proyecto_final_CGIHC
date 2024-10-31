@@ -8,6 +8,9 @@
 #include <map>
 #include <cstdlib>  
 #include <ctime>    
+#include <fstream>
+#include <sstream>
+#include <iostream>
 
 #include <glew.h>
 #include <glfw3.h>
@@ -96,10 +99,14 @@ Model league;
 Model shaymin;
 Model estadio;
 
+//Bluey
 Model casa_heeler;
 Model botella_vidrio;
 
+//Escenario
 Skybox skybox;
+Model islaTexture;
+Model oceano;
 
 //materiales
 Material Material_brillante;
@@ -120,11 +127,15 @@ PointLight pointLights[MAX_POINT_LIGHTS];
 SpotLight spotLights[MAX_SPOT_LIGHTS];
 
 // Vertex Shader
-static const char* vShader = "shaders/shader_light.vert";
+//static const char* vShader = "shaders/shader_light.vert";
+static const char* vShader = "shaders/12_ProceduralAnimation.vs";
 
+static const char* vproceduralShader = "shaders/shader_light.vert";
 // Fragment Shader
-static const char* fShader = "shaders/shader_light.frag";
+//static const char* fShader = "shaders/shader_light.frag";
+static const char* fShader = "shaders/12_ProceduralAnimation.fs";
 
+static const char* fproceduralShader = "shaders/shader_light.frag";
 
 //funci�n de calculo de normales por promedio de v�rtices 
 void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat* vertices, unsigned int verticeCount,
@@ -299,6 +310,10 @@ void CreateShaders()
 	Shader* shader1 = new Shader();
 	shader1->CreateFromFiles(vShader, fShader);
 	shaderList.push_back(*shader1);
+
+	Shader* shader2 = new Shader();
+	shader2->CreateFromFiles(vproceduralShader, fproceduralShader);
+	shaderList.push_back(*shader2);
 }
 
 /*
@@ -696,6 +711,9 @@ int main()
 	merry.LoadModel("Models/Going Merry.obj");
 	hito.LoadModel("Models/hito_hito.obj");
 
+	islaTexture.LoadModel("Textures/isla/isla4.obj");
+	oceano.LoadModel("Textures/isla/mar.obj");
+
 	// +++++++++++++++++++++++++skybox+++++++++++++++++++++++++++++++++++++++++
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/dia/posz.jpg");
@@ -793,7 +811,7 @@ int main()
 	////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose())
 	{
-
+		
 		GLfloat now = glfwGetTime();
 		deltaTime = now - lastTime;
 		deltaTime += (now - lastTime) / limitFPS;
@@ -813,16 +831,22 @@ int main()
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		skybox.DrawSkybox(camera.calculateViewMatrix(), projection);
+
+		//Se usa el primer shader y se definen las matrices de proyección y de vista
 		shaderList[0].UseShader();
 		uniformModel = shaderList[0].GetModelLocation();
-		uniformProjection = shaderList[0].GetProjectionLocation();
 		uniformView = shaderList[0].GetViewLocation();
-		uniformEyePosition = shaderList[0].GetEyePositionLocation();
-		uniformColor = shaderList[0].getColorLocation();
+
+		shaderList[1].UseShader();
+		uniformModel = shaderList[1].GetModelLocation();
+		uniformProjection = shaderList[1].GetProjectionLocation();
+		uniformView = shaderList[1].GetViewLocation();
+		uniformEyePosition = shaderList[1].GetEyePositionLocation();
+		uniformColor = shaderList[1].getColorLocation();
 
 		//informaci�n en el shader de intensidad especular y brillo
-		uniformSpecularIntensity = shaderList[0].GetSpecularIntensityLocation();
-		uniformShininess = shaderList[0].GetShininessLocation();
+		uniformSpecularIntensity = shaderList[1].GetSpecularIntensityLocation();
+		uniformShininess = shaderList[1].GetShininessLocation();
 
 		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
 		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
@@ -836,12 +860,12 @@ int main()
 
 		//informacion al shader de fuentes de iluminaci�n
 		if (dia)
-			shaderList[0].SetDirectionalLight(&main_light_dia);
+			shaderList[1].SetDirectionalLight(&main_light_dia);
 		else
-			shaderList[0].SetDirectionalLight(&main_light_noche);
+			shaderList[1].SetDirectionalLight(&main_light_noche);
 
-		//shaderList[0].SetPointLights(pointLights, pointLightCount); linterna
-		shaderList[0].SetSpotLights(spotLights, spotLightCount);
+		shaderList[1].SetPointLights(pointLights, pointLightCount);
+		shaderList[1].SetSpotLights(spotLights, spotLightCount);
 
 
 		//INICIO DE CREACION DE MODELOS
@@ -865,6 +889,20 @@ int main()
 		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		meshList[2]->RenderMesh();
 
+		//Isla principal
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		islaTexture.RenderModel();
+
+		//oceano
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, -4.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		oceano.RenderModel();
 
 		//Helicoptero Rodrigo
 		copter.set_move(movOffset * deltaTime);
