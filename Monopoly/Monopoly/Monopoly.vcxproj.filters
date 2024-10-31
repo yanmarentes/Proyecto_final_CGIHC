@@ -113,5 +113,132 @@
     <ClInclude Include="utils.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="animatedmodel.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="modelstructs.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\01-simple.fs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\01-simple.vs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\02-simplePVM.fs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\02-simplePVM.vs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\09_fragment_skinning.fs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\09_vertex_skinning.vs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\10_fragment_cubemap.fs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\10_fragment_simple.fs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\10_fragment_simpleLights.fs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\10_fragment_skinning-IT.fs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\10_texturesPhong.fs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\10_texturesPhong.vs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\10_vertex_cubemap.vs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\10_vertex_simple.vs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\10_vertex_simpleLights.vs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\10_vertex_skinning-IT.vs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\11_BasicPhongShader.fs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\11_BasicPhongShader.vs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\11_Fresnel.fs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\11_Fresnel.vs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\11_PhongShaderMultLights.fs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\11_PhongShaderMultLights.vs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\11_texturesPhong2.fs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\11_texturesPhong2.vs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\12_ProceduralAnimation.fs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\12_ProceduralAnimation.vs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\13_particles.fs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\13_particles.vs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\13_wavesAnimation.fs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\13_wavesAnimation.vs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\14_mirror.fs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\14_mirror.vs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\15_picking.fs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\15_picking.vs">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\shader_light.frag">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\shader_light.vert">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\skybox.frag">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="shaders\skybox.vert">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="shaders\readme.txt">
+      <Filter>Archivos de recursos</Filter>
+    </Text>
   </ItemGroup>
 </Project>
