@@ -50,7 +50,7 @@ Camera camera;
 
 Texture piso_texture_dia;
 Texture piso_texture_noche;
-Texture dadoTexture;
+Texture dadoTexture_8;
 
 ModelSquareMovement main_character;
 Model main_brazo_derecho;
@@ -61,6 +61,7 @@ ModelSquareMovement copter;
 Model Helices;
 ModelSquareMovement Barco;
 Model Rueda_barco;
+Model Dado_4_caras;
 
 //One piece
 Model Luffy;
@@ -229,7 +230,7 @@ void CreateObjects()
 
 void CrearDado()
 {
-	unsigned int dado_indices[] = {
+	unsigned int dado8_id[] = {
 		0, 1, 2,  // Tri�ngulo 1
 		3, 4, 5,  // Tri�ngulo 2
 		6, 7, 8,  // Tri�ngulo 3
@@ -238,60 +239,57 @@ void CrearDado()
 		15, 16, 17, // Tri�ngulo 6
 		18, 19, 20, // Tri�ngulo 7
 		21, 22, 23, // Tri�ngulo 8
-		24, 25, 26, // Tri�ngulo 9
-		27, 28, 29, // Tri�ngulo 10
 	};
 
 
-	GLfloat dado_vertices[] = {
+	GLfloat dado8_vt[] = {
+		// Cara superior 1
 		//x		y		z		S		T			NX		NY		NZ
-		0.0f,  1.0f,  0.0f,	    0.45f,  0.3f,		-1.0f,	-1.0f,	-1.0f, //0
-		1.0f,  0.0f,  -0.24f,	0.62f,	0.19f,		-1.0f,	-1.0f,	-1.0f, //1 //cara 9
-		0.65f, 0.0f,  0.97f,	0.44f,	0.13f,		-1.0f,	-1.0f,	-1.0f, //2
+		0.0f, 1.0f, 0.0f, 0.5, 0.75, 1.0f, 1.0f, 1.0f, // 0
+		0.0f, 0.0f, -1.0f, 0.75, 1.0, 1.0f, 1.0f, 1.0f, //1
+		1.0f, 0.0f, 0.0f, 1.0f, 0.75, 1.0f, 1.0f, 1.0f, // 2
 
-		0.0f,  1.0f,  0.0f,	    0.415f, 0.295f,		0.0f,	-1.0f,	-1.0f, //0
-		0.65f, 0.0f,  0.97f,	0.415f,	0.13f,		0.0f,	-1.0f,	-1.0f, //2 // cara 3
-	   -0.65f, 0.0f,  0.97f,	0.25f,	0.2f,		0.0f,	-1.0f,	-1.0f, //3
+		// Cara superior 3
+		0.0f, 1.0f, 0.0f, 0.5, 0.75, 1.0f, 1.0f, 1.0f, // 3
+		1.0f, 0.0f, 0.0f, 1.0f, 0.75, 1.0f, 1.0f, 1.0f, // 4
+		0.0f, 0.0f, 1.0f, 0.75, 0.50, 1.0f, 1.0f, 1.0f, // 5
 
-		0.0f,  1.0f,  0.0f,	    0.39f,  0.31f,		1.0f,	-1.0f,	-1.0f, //0
-	   -0.65f, 0.0f,  0.97f,	0.201f,	0.22f,		1.0f,	-1.0f,	-1.0f, //3 //cara 1
-	   -1.0f,  0.0f, -0.24f,	0.17f,	0.33f,		1.0f,	-1.0f,	-1.0f, //4
+		// Cara superior 5
+		0.0f, 1.0f, 0.0f, 0.5f, 0.75, 1.0f, 1.0f, 1.0f, // 6
+		0.0f, 0.0f, 1.0f, 0.75, 0.50, 1.0f, 1.0f, 1.0f, // 7
+		-1.0f, 0.0f, 0.0f, 0.25, 0.5, 1.0f, 1.0f, 1.0f, // 8
 
-		0.0f,  1.0f,  0.0f,	    0.41f,  0.34f,		1.0f,	-1.0f,	1.0f, //0
-	   -1.0f,  0.0f, -0.24f,	0.2f,	0.4f,		1.0f,	-1.0f,	1.0f, //4 //cara 7
-		0.0f,  0.0f,  -1.0f,	0.3f,	0.48f,		1.0f,	-1.0f,	1.0f, //5
+		// Cara superior 7
+		0.0f, 1.0f, 0.0f, 0.5f, 0.75, 1.0f, 1.0f, 1.0f, // 9 
+		-1.0f, 0.0f, 0.0f, 0.25, 0.5, 1.0f, 1.0f, 1.0f, // 10
+		0.0f, -0.0f, -1.0f, 0.0f, 0.75f, 1.0f, 1.0f, 1.0f, // 11,
 
-		0.0f,  1.0f,  0.0f,	    0.43f,  0.36f,		-1.0f,	-1.0f,	1.0f, //0
-		0.0f,  0.0f,  -1.0f,	0.4f,	0.51f,		-1.0f,	-1.0f,	1.0f, //5 //cara 5
-		1.0f,  0.0f,  -0.24f,	0.52f,	0.5f,		-1.0f,	-1.0f,	1.0f, //1
+		// Caras inferiores
+		// Cara inferior 4
+		0.0f, -1.0f, 0.0f, 0.5, 0.25, 1.0f, 1.0f, 1.0f, // 12
+		0.0f, 0.0f, -1.0f, 0.75, 0.0, 1.0f, 1.0f, 1.0f, //13
+		1.0f, 0.0f, 0.0f, 1.0f, 0.25, 1.0f, 1.0f, 1.0f, // 14
 
-		0.0f, -1.0f,  0.0f,	    0.61f,  0.69f,		-1.0f,	1.0f,	-1.0f, //6
-		1.0f,  0.0f,  -0.24f,	0.48f,	0.53f,		-1.0f,	1.0f,	-1.0f, //1 //cara 10
-		0.65f, 0.0f,  0.97f,	0.68f,	0.52f,		-1.0f,	1.0f,	-1.0f, //2
+		// Cara superior 6
+		0.0f, -1.0f, 0.0f, 0.5, 0.25, 1.0f, 1.0f, 1.0f, // 15
+		1.0f, 0.0f, 0.0f, 1.0f, 0.25, 1.0f, 1.0f, 1.0f, // 16
+		0.0f, 0.0f, 1.0f, 0.75, 0.50, 1.0f, 1.0f, 1.0f, // 17
 
-		0.0f, -1.0f,  0.0f,	    0.59f,  0.69f,		0.0f,	1.0f,	-1.0f, //6
-		0.65f, 0.0f,  0.97f,	0.45f,	0.56f,		0.0f,	1.0f,	-1.0f, //2 //cara 8
-	   -0.65f, 0.0f,  0.97f,	0.36f,	0.67f,		0.0f,	1.0f,	-1.0f, // 3
+		// Cara superior 8
+		0.0f, -1.0f, 0.0f, 0.5f, 0.25, 1.0f, 1.0f, 1.0f, // 18
+		0.0f, 0.0f, 1.0f, 0.75, 0.50, 1.0f, 1.0f, 1.0f, // 19
+		-1.0f, 0.0f, 0.0f, 0.25, 0.5, 1.0f, 1.0f, 1.0f, // 20
 
-	   0.0f, -1.0f,  0.0f,	    0.58f,  0.72f,		1.0f,	1.0f,	-1.0f, //6
-	   -0.65f, 0.0f,  0.97f,	0.44f,	0.84f,		1.0f,	1.0f,	-1.0f, //3 //cara 2
-	   -1.0f,  0.0f, -0.24f,	0.36f,	0.71f,		1.0f,	1.0f,	-1.0f, //4
-
-	   0.0f, -1.0f,  0.0f,	    0.6f,  0.723,		1.0f,	1.0f,	1.0f, //6
-	   -1.0f,  0.0f, -0.24f,	0.63f,	0.89f,		1.0f,	1.0f,	1.0f, //4 //cara 6
-		0.0f,  0.0f,  -1.0f,	0.47f,	0.86f,		1.0f,	1.0f,	1.0f, //5
-
-		0.0f, -1.0f,  0.0f,	    0.62f,  0.72f,		-1.0f,	1.0f,	1.0f, //6 //cara 4
-		1.0f,  0.0f,  -0.24f,	0.69f,	0.89f,		-1.0f,	1.0f,	1.0f, //1
-		0.0f,  0.0f,  -1.0f,	0.83f,	0.8f,		-1.0f,	1.0f,	1.0f, //5
+		// Cara superior 2
+		0.0f, -1.0f, 0.0f, 0.5f, 0.25, 1.0f, 1.0f, 1.0f, // 21
+		-1.0f, 0.0f, 0.0f, 0.25, 0.5, 1.0f, 1.0f, 1.0f, // 22
+		0.0f, -0.0f, -1.0f, 0.0f, 0.25f, 1.0f, 1.0f, 1.0f, // 23
 	};
 
-	Mesh* dado = new Mesh();
-	dado->CreateMesh(dado_vertices, dado_indices, sizeof(dado_vertices) / sizeof(dado_vertices[0]), sizeof(dado_indices) / sizeof(dado_indices[0]));
-
-	meshList.push_back(dado);
-
-	
+	// clang-format on
+	Mesh* dado8 = new Mesh();
+	dado8->CreateMesh(dado8_vt, dado8_id, 192, 36);
+	meshList.push_back(dado8);
 
 }
 
@@ -644,8 +642,8 @@ int main()
 	piso_texture_dia.LoadTextureA();
 	piso_texture_noche = Texture("Textures/monopoly_noche.jpg");
 	piso_texture_noche.LoadTextureA();
-	dadoTexture = Texture("Textures/dado10caras.png");
-	dadoTexture.LoadTextureA();
+	dadoTexture_8 = Texture("Textures/dado_8f.tga");
+	dadoTexture_8.LoadTextureA();
 
 	// +++++++++++++++++++++++++++++++ Modelos ++++++++++++++++++++++++++++++++
 	main_character.LoadModel("Models/chopper_sin_extremidades.obj");
@@ -664,6 +662,8 @@ int main()
 	Barco.LoadModel("Models/barco.obj");
 	Barco.load_animation_parameters(VEHICLES_DISTANCE_CORNER, 0.0f, 90.0f, 0);
 	Rueda_barco.LoadModel("Models/rueda.obj");
+
+	Dado_4_caras.LoadModel("Models/avr_dado_4.obj");
 
 	Luffy.LoadModel("Models/Luffy.obj");
 	ark_maxim.LoadModel("Models/ark_maxim.obj");
@@ -696,15 +696,16 @@ int main()
 	merry.LoadModel("Models/Going Merry.obj");
 	hito.LoadModel("Models/hito_hito.obj");
 
-
 	// +++++++++++++++++++++++++skybox+++++++++++++++++++++++++++++++++++++++++
 	std::vector<std::string> skyboxFaces;
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_rt.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_lf.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_dn.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_up.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_bk.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_ft.tga");
+	skyboxFaces.push_back("Textures/Skybox/dia/posz.jpg");
+	skyboxFaces.push_back("Textures/Skybox/dia/negz.jpg");
+	
+	skyboxFaces.push_back("Textures/Skybox/dia/negy.jpg");
+	skyboxFaces.push_back("Textures/Skybox/dia/posy.jpg");
+	skyboxFaces.push_back("Textures/Skybox/dia/negx.jpg");
+	skyboxFaces.push_back("Textures/Skybox/dia/posx.jpg");
+	
 
 	skybox = Skybox(skyboxFaces);
 
@@ -731,16 +732,16 @@ int main()
 
 	unsigned int spotLightCount = 0;
 	//linterna
-	spotLights[0] = SpotLight(1.0f, 1.0f, 1.0f,
+	/*spotLights[0] = SpotLight(1.0f, 1.0f, 1.0f,
 		0.0f, 2.0f,
 		0.0f, 0.0f, 0.0f,
 		0.0f, -1.0f, 0.0f,
 		1.0f, 0.0f, 0.0f,
 		5.0f);
-	spotLightCount++;
+	spotLightCount++;*/
 
 	//luz fija
-	spotLights[1] = SpotLight(0.0f, 0.0f, 1.0f,
+	spotLights[0] = SpotLight(0.0f, 0.0f, 1.0f,
 		1.0f, 2.0f,
 		0.0f, 22.0f, 0.0f,
 		0.0f, -5.0f, 0.0f,
@@ -770,14 +771,16 @@ int main()
 	int state_main_movement = STATE_REPOSO;
 	int modelstate = 4;
 	
-	//++++++++++++++Dado++++++++++++++++++++++++++++++++
-	Package_Info_Dado info_dado;
-	info_dado.movDado = 0.0f;
-	info_dado.mov_dado_side = 0.0f;
-	info_dado.rotacion_dado = { 0.0f, 0.0f, 0.0f };
-	info_dado.map_rotaciones = crear_rotaciones_dado();
-	info_dado.altura_dado = 35.0f;
-	info_dado.side_limit = 30.0f;
+	//++++++++++++++Dado 8 caras++++++++++++++++++++++++++++++++
+	Package_Info_Dado info_dados;
+	info_dados.movDado = 0.0f;
+	info_dados.mov_dado_side = 0.0f;
+	info_dados.rotacion_dado_8 = { 0.0f, 0.0f, 0.0f };
+	info_dados.rotacion_dado_4 = { 0.0f, 0.0f, 0.0f };
+	info_dados.map_rotaciones_8 = crear_rotaciones_dado_8_caras();
+	info_dados.map_rotaciones_4 = crear_rotaciones_dado_4_caras();
+	info_dados.altura_dado = 35.0f;
+	info_dados.side_limit = 32.0f;
 
 	std::srand(static_cast<unsigned int>(std::time(0)));
 
@@ -827,9 +830,9 @@ int main()
 
 		// luz ligada a la c�mara de tipo flash
 		//sirve para que en tiempo de ejecuci�n (dentro del while) se cambien propiedades de la luz
-		glm::vec3 lowerLight = camera.getCameraPosition();
-		lowerLight.y -= 0.3f;
-		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
+		//glm::vec3 lowerLight = camera.getCameraPosition();
+		//lowerLight.y -= 0.3f;
+		//spotLights[0].SetFlash(lowerLight, camera.getCameraDirection()); linterna
 
 		//informacion al shader de fuentes de iluminaci�n
 		if (dia)
@@ -837,7 +840,7 @@ int main()
 		else
 			shaderList[0].SetDirectionalLight(&main_light_noche);
 
-		shaderList[0].SetPointLights(pointLights, pointLightCount);
+		//shaderList[0].SetPointLights(pointLights, pointLightCount); linterna
 		shaderList[0].SetSpotLights(spotLights, spotLightCount);
 
 
@@ -945,43 +948,40 @@ int main()
 		main_brazo_izquierdo.RenderModel();
 
 
-		//Dado
+		//Dados
 		//Revisar si se presiono la tecla T para tirar el dado
-		manage_get_tirada_dado(&mainWindow, state_main_movement, &info_dado);
-
+		manage_get_tirada_dado(&mainWindow, state_main_movement, &info_dados);
+		// 8 caras
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(0.0f, info_dado.altura_dado + info_dado.movDado, info_dado.mov_dado_side));
+		model = glm::translate(model, glm::vec3(0.0f, info_dados.altura_dado + info_dados.movDado, 4.0f + info_dados.mov_dado_side));
 		if (state_main_movement == STATE_TIRANDO_DADO)
-			model = glm::rotate(model, glm::radians((info_dado.movDado + info_dado.mov_dado_side) * 20.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-		model = glm::rotate(model, glm::radians(info_dado.rotacion_dado.x), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(info_dado.rotacion_dado.y), glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(info_dado.rotacion_dado.z), glm::vec3(0.0f, 0.0f, 1.0f));
-		model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+			model = glm::rotate(model, glm::radians((info_dados.movDado + info_dados.mov_dado_side) * 20.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+		model = glm::rotate(model, glm::radians(info_dados.rotacion_dado_8.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(info_dados.rotacion_dado_8.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(info_dados.rotacion_dado_8.z), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
 		
 		//Aqui se maneja la animacion del dado
-		info_dado.pos_y = model[3][1];
-		info_dado.pos_side = model[3][2];
-		manage_tirando_dado(state_main_movement, &main_character, &info_dado, &info_main_character, movOffset * deltaTime);
+		info_dados.pos_y = model[3][1];
+		info_dados.pos_side = model[3][2];
+		manage_tirando_dado(state_main_movement, &main_character, &info_dados, &info_main_character, movOffset * deltaTime);
 
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		dadoTexture.UseTexture();
+		dadoTexture_8.UseTexture();
 		meshList[4]->RenderMesh();
 
-		float avr_x = mainWindow.getrotx();		
-		float avr_y = mainWindow.getroty();
-		float avr_z = mainWindow.getrotz();
-
+		// 4 caras
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(10.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(avr_x), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(avr_y), glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(avr_z), glm::vec3(0.0f, 0.0f, 1.0f));
-		//model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
-
+		model = glm::translate(model, glm::vec3(4.0f + info_dados.mov_dado_side, info_dados.altura_dado + info_dados.movDado, 0.0f));
+		if (state_main_movement == STATE_TIRANDO_DADO)
+			model = glm::rotate(model, glm::radians((info_dados.movDado + info_dados.mov_dado_side) * 20.0f), glm::vec3(-1.0f, -1.0f, -1.0f));
+		model = glm::rotate(model, glm::radians(info_dados.rotacion_dado_4.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(info_dados.rotacion_dado_4.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(info_dados.rotacion_dado_4.z), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
+		
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		dadoTexture.UseTexture();
-		meshList[5]->RenderMesh();
-
+		Dado_4_caras.RenderModel();
 
 
 		//Revisar casilla y modelar personaje en turno
