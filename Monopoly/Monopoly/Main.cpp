@@ -8,6 +8,9 @@
 #include <map>
 #include <cstdlib>  
 #include <ctime>    
+#include <fstream>
+#include <sstream>
+#include <iostream>
 
 #include <glew.h>
 #include <glfw3.h>
@@ -59,6 +62,8 @@ Model main_pierna_derecha;
 Model main_pierna_izquierda;
 ModelSquareMovement copter;
 Model Helices;
+ModelSquareMovement Barco;
+Model Rueda_barco;
 
 //One piece
 Model Luffy;
@@ -69,7 +74,6 @@ Model zoro;
 Model nami;
 Model moby_dick;
 Model laboon;
-Model brook;
 Model hito;
 Model gomu;
 Model ope;
@@ -94,10 +98,14 @@ Model league;
 Model shaymin;
 Model estadio;
 
+//Bluey
 Model casa_heeler;
 Model botella_vidrio;
 
+//Escenario
 Skybox skybox;
+Model islaTexture;
+Model oceano;
 
 //materiales
 Material Material_brillante;
@@ -110,17 +118,21 @@ GLfloat lastTime = 0.0f;
 static double limitFPS = 1.0 / 60.0;
 
 // luz direccional
-DirectionalLight mainLight;
+DirectionalLight main_light_noche;
+DirectionalLight main_light_dia;
+
 //para declarar varias luces de tipo pointlight
 PointLight pointLights[MAX_POINT_LIGHTS];
 SpotLight spotLights[MAX_SPOT_LIGHTS];
 
 // Vertex Shader
-static const char* vShader = "shaders/shader_light.vert";
+static const char* vShader = "shaders/12_ProceduralAnimation.vs";
 
+static const char* vproceduralShader = "shaders/shader_light.vert";
 // Fragment Shader
-static const char* fShader = "shaders/shader_light.frag";
+static const char* fShader = "shaders/12_ProceduralAnimation.fs";
 
+static const char* fproceduralShader = "shaders/shader_light.frag";
 
 //funci�n de calculo de normales por promedio de v�rtices 
 void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat* vertices, unsigned int verticeCount,
@@ -296,6 +308,10 @@ void CreateShaders()
 	Shader* shader1 = new Shader();
 	shader1->CreateFromFiles(vShader, fShader);
 	shaderList.push_back(*shader1);
+
+	Shader* shader2 = new Shader();
+	shader2->CreateFromFiles(vproceduralShader, fproceduralShader);
+	shaderList.push_back(*shader2);
 }
 
 /*
@@ -654,8 +670,12 @@ int main()
 
 	copter.LoadModel("Models/cop.obj");
 	copter.load_animation_parameters(VEHICLES_DISTANCE_CORNER, 0.0f, 90.0f, 2);
-
 	Helices.LoadModel("Models/helices.obj");
+
+	Barco.LoadModel("Models/barco.obj");
+	Barco.load_animation_parameters(VEHICLES_DISTANCE_CORNER, 0.0f, 90.0f, 0);
+	Rueda_barco.LoadModel("Models/rueda.obj");
+
 	Luffy.LoadModel("Models/Luffy.obj");
 	ark_maxim.LoadModel("Models/ark_maxim.obj");
 	baya_frambu.LoadModel("Models/baya_frambu.obj");
@@ -679,7 +699,6 @@ int main()
 	ship.LoadModel("Models/ship.obj");
 	zoro.LoadModel("Models/zoro.obj");
 	ace.LoadModel("Models/Ace.obj");
-	brook.LoadModel("Models/brook.obj");
 	mera.LoadModel("Models/Mera_mera.obj");
 	gomu.LoadModel("Models/gomu_gomu_no_mi.obj");
 	ope.LoadModel("Models/lawsfruit1.obj");
@@ -687,6 +706,9 @@ int main()
 	laboon.LoadModel("Models/Laboon.obj");
 	merry.LoadModel("Models/Going Merry.obj");
 	hito.LoadModel("Models/hito_hito.obj");
+
+	islaTexture.LoadModel("Textures/isla/isla4.obj");
+	oceano.LoadModel("Textures/isla/mar.obj");
 
 	// +++++++++++++++++++++++++skybox+++++++++++++++++++++++++++++++++++++++++
 	std::vector<std::string> skyboxFaces;
@@ -705,10 +727,14 @@ int main()
 	Material_opaco = Material(0.3f, 4);
 
 
-	//luz direccional, s�lo 1 y siempre debe de existir
-	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
+	//luz direccional, solo 1 y siempre debe de existir
+	main_light_noche = DirectionalLight(1.0f, 1.0f, 1.0f,
 		0.3f, 0.3f,
 		0.0f, 0.0f, -1.0f);
+	main_light_dia = DirectionalLight(1.0f, 0.9f, 0.9f,
+		0.5f, 0.5f,
+		0.0f, -1.0f, -0.5f);
+
 	//contador de luces puntuales
 	unsigned int pointLightCount = 0;
 	//Declaraci�n de primer luz puntual
@@ -762,9 +788,11 @@ int main()
 	//++++++++++++++Dado++++++++++++++++++++++++++++++++
 	Package_Info_Dado info_dado;
 	info_dado.movDado = 0.0f;
+	info_dado.mov_dado_side = 0.0f;
 	info_dado.rotacion_dado = { 0.0f, 0.0f, 0.0f };
 	info_dado.map_rotaciones = crear_rotaciones_dado();
-	info_dado.altura_dado = 15.0f;
+	info_dado.altura_dado = 35.0f;
+	info_dado.side_limit = 30.0f;
 
 	std::srand(static_cast<unsigned int>(std::time(0)));
 
@@ -777,7 +805,7 @@ int main()
 	////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose())
 	{
-
+		
 		GLfloat now = glfwGetTime();
 		deltaTime = now - lastTime;
 		deltaTime += (now - lastTime) / limitFPS;
@@ -797,16 +825,22 @@ int main()
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		skybox.DrawSkybox(camera.calculateViewMatrix(), projection);
+
+		//Se usa el primer shader y se definen las matrices de proyección y de vista
 		shaderList[0].UseShader();
 		uniformModel = shaderList[0].GetModelLocation();
-		uniformProjection = shaderList[0].GetProjectionLocation();
 		uniformView = shaderList[0].GetViewLocation();
-		uniformEyePosition = shaderList[0].GetEyePositionLocation();
-		uniformColor = shaderList[0].getColorLocation();
+
+		shaderList[1].UseShader();
+		uniformModel = shaderList[1].GetModelLocation();
+		uniformProjection = shaderList[1].GetProjectionLocation();
+		uniformView = shaderList[1].GetViewLocation();
+		uniformEyePosition = shaderList[1].GetEyePositionLocation();
+		uniformColor = shaderList[1].getColorLocation();
 
 		//informaci�n en el shader de intensidad especular y brillo
-		uniformSpecularIntensity = shaderList[0].GetSpecularIntensityLocation();
-		uniformShininess = shaderList[0].GetShininessLocation();
+		uniformSpecularIntensity = shaderList[1].GetSpecularIntensityLocation();
+		uniformShininess = shaderList[1].GetShininessLocation();
 
 		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
 		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
@@ -816,12 +850,16 @@ int main()
 		//sirve para que en tiempo de ejecuci�n (dentro del while) se cambien propiedades de la luz
 		glm::vec3 lowerLight = camera.getCameraPosition();
 		lowerLight.y -= 0.3f;
-		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
+		spotLights[1].SetFlash(lowerLight, camera.getCameraDirection());
 
-		//informaci�n al shader de fuentes de iluminaci�n
-		shaderList[0].SetDirectionalLight(&mainLight);
-		shaderList[0].SetPointLights(pointLights, pointLightCount);
-		shaderList[0].SetSpotLights(spotLights, spotLightCount);
+		//informacion al shader de fuentes de iluminaci�n
+		if (dia)
+			shaderList[1].SetDirectionalLight(&main_light_dia);
+		else
+			shaderList[1].SetDirectionalLight(&main_light_noche);
+
+		shaderList[1].SetPointLights(pointLights, pointLightCount);
+		shaderList[1].SetSpotLights(spotLights, spotLightCount);
 
 
 		//INICIO DE CREACION DE MODELOS
@@ -845,6 +883,20 @@ int main()
 		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		meshList[2]->RenderMesh();
 
+		//Isla principal
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		islaTexture.RenderModel();
+
+		//oceano
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, -4.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		oceano.RenderModel();
 
 		//Helicoptero Rodrigo
 		copter.set_move(movOffset * deltaTime);
@@ -863,8 +915,35 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Helices.RenderModel();
 
+		//Barco Emir
+		Barco.set_move(movOffset * deltaTime);
 
-		manage_ejecutando_tirada(state_main_movement, &main_character, &info_main_character, modelstate);
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(Barco.ubi_model.x, Barco.ubi_model.y, Barco.ubi_model.z));
+		model = glm::rotate(model, glm::radians(Barco.current_rotate), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(Barco.mov_model, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Barco.RenderModel();
+
+		model_aux = model;
+
+		float mov_rueda = Barco.mov_model * -10;
+		model = glm::translate(model, glm::vec3(-19.0f, 5.0f, 12.0f));
+		model = glm::rotate(model, glm::radians(mov_rueda), glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Rueda_barco.RenderModel();
+
+		model = model_aux;
+
+		model = glm::translate(model, glm::vec3(-19.0f, 5.0f, -12.0f));
+		model = glm::rotate(model, glm::radians(mov_rueda), glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Rueda_barco.RenderModel();
+
+
+		manage_ejecutando_tirada(state_main_movement, &main_character, &info_main_character, modelstate, deltaTime);
 
 		//Main model Tony Tony Chopper
 
@@ -906,13 +985,17 @@ int main()
 		manage_get_tirada_dado(&mainWindow, state_main_movement, &info_dado);
 
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(0.0f, info_dado.altura_dado + info_dado.movDado, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, info_dado.altura_dado + info_dado.movDado, info_dado.mov_dado_side));
+		if (state_main_movement == STATE_TIRANDO_DADO)
+			model = glm::rotate(model, glm::radians((info_dado.movDado + info_dado.mov_dado_side) * 20.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 		model = glm::rotate(model, glm::radians(info_dado.rotacion_dado.x), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(info_dado.rotacion_dado.y), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(info_dado.rotacion_dado.z), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 		
 		//Aqui se maneja la animacion del dado
 		info_dado.pos_y = model[3][1];
+		info_dado.pos_side = model[3][2];
 		manage_tirando_dado(state_main_movement, &main_character, &info_dado, &info_main_character, movOffset * deltaTime);
 
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
