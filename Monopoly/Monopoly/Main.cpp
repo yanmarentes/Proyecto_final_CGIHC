@@ -155,6 +155,9 @@ void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat
 	}
 }
 
+/*void manage_light(int ids_to_turn) {
+
+}*/
 
 void CreateObjects()
 {
@@ -744,7 +747,7 @@ int main()
 	spotLights[0] = SpotLight(0.0f, 0.0f, 1.0f,
 		1.0f, 2.0f,
 		0.0f, 22.0f, 0.0f,
-		0.0f, -5.0f, 0.0f,
+		0.0f, -1.0f, 0.0f,
 		1.0f, 0.0f, 0.0f,
 		15.0f);
 	spotLightCount++;
@@ -919,6 +922,8 @@ int main()
 		model = glm::translate(model, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z));
 		model = glm::rotate(model, glm::radians(main_character.current_rotate), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, main_character.mov_model));
+		spotLights[0].SetPos(glm::vec3(model[3][0], 30.0f, model[3][2]));
+
 		model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		main_character.RenderModel();
