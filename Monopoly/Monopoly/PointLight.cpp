@@ -38,3 +38,7 @@ void PointLight::UseLight(GLfloat ambientIntensityLocation, GLfloat ambientcolor
 PointLight::~PointLight()
 {
 }
+
+void PointLight::set_position(glm::vec3 light_position) {
+	position = light_position;
+}

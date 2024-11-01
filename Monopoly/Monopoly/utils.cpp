@@ -83,13 +83,13 @@ void manage_ejecutando_tirada(int &state_main_movement, ModelSquareMovement* mai
 
 
 		if (info_main_character->fordward_extremidad) {
-			info_main_character->mov_extremidades += (3.0 * delta_time);
+			info_main_character->mov_extremidades += (4.0 * delta_time);
 
 			if (info_main_character->mov_extremidades >= 45.0f)
 				info_main_character->fordward_extremidad = false;
 		}
 		else {
-			info_main_character->mov_extremidades -= (3.0 * delta_time);
+			info_main_character->mov_extremidades -= (4.0 * delta_time);
 
 			if (info_main_character->mov_extremidades <= -45.0f)
 				info_main_character->fordward_extremidad = true;

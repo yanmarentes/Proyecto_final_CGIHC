@@ -43,17 +43,16 @@ public:
 
 	Ubicacion ubi_model;
 	float current_rotate;
-	float mov_model;
+	float mov_model_side;
 	float mov_model_since_tirada;
 	float mov_model_total;
 	int num_turn;
+	int side;
 
 private:
 	float distance;
 	float addition_rotate;
 	float movement_limit;
-	int side;
-
 };
 
 #endif

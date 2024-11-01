@@ -34,6 +34,7 @@
 #include "PointLight.h"
 #include "SpotLight.h"
 #include "Material.h"
+#define ALTURA_OVNIS 30
 const float toRadians = 3.14159265f / 180.0f;
 
 //variables para animaci�n
@@ -64,6 +65,7 @@ Model Helices;
 ModelSquareMovement Barco;
 Model Rueda_barco;
 Model Dado_4_caras;
+Model Ovni;
 
 //One piece
 Model Luffy;
@@ -120,6 +122,10 @@ DirectionalLight main_light_dia;
 //para declarar varias luces de tipo pointlight
 PointLight pointLights[MAX_POINT_LIGHTS];
 SpotLight spotLights[MAX_SPOT_LIGHTS];
+SpotLight current_spot_lights[MAX_SPOT_LIGHTS];
+unsigned int current_num_spots_lights = 0;
+PointLight current_points_lights[MAX_POINT_LIGHTS];
+unsigned int current_num_points_lights = 0;
 
 // Vertex Shader
 static const char* vShader = "shaders/shader_light.vert";
@@ -157,9 +163,59 @@ void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat
 	}
 }
 
-/*void manage_light(int ids_to_turn) {
+void manage_lights(bool &dia) {
+	current_num_spots_lights = 0;
+	current_num_points_lights = 0;
 
-}*/
+	//12 y 103
+	if(!dia) {
+		switch (main_character.side) {
+		case 0:
+			if (main_character.mov_model_side < 12.0f) {
+				current_spot_lights[current_num_spots_lights] = spotLights[0];
+				current_num_spots_lights++;
+			}
+			if (main_character.mov_model_side > 123.0f) {
+				current_spot_lights[current_num_spots_lights] = spotLights[1];
+				current_num_spots_lights++;
+			}
+			break;
+		case 1:
+			if (main_character.mov_model_side < 12.0f) {
+				current_spot_lights[current_num_spots_lights] = spotLights[1];
+				current_num_spots_lights++;
+			}
+			if (main_character.mov_model_side > 123.0f) {
+				current_spot_lights[current_num_spots_lights] = spotLights[2];
+				current_num_spots_lights++;
+			}
+			break;
+		case 2:
+			if (main_character.mov_model_side < 12.0f) {
+				current_spot_lights[current_num_spots_lights] = spotLights[2];
+				current_num_spots_lights++;
+			}
+			if (main_character.mov_model_side > 123.0f) {
+				current_spot_lights[current_num_spots_lights] = spotLights[3];
+				current_num_spots_lights++;
+			}
+			break;
+		case 3:
+			if (main_character.mov_model_side < 12.0f) {
+				current_spot_lights[current_num_spots_lights] = spotLights[3];
+				current_num_spots_lights++;
+			}
+			if (main_character.mov_model_side > 123.0f) {
+				current_spot_lights[current_num_spots_lights] = spotLights[0];
+				current_num_spots_lights++;
+			}
+			break;
+		}
+
+		current_points_lights[0] = pointLights[0];
+		current_num_points_lights++;
+	}
+}
 
 void CreateObjects()
 {
@@ -630,6 +686,12 @@ void render_current_model(int state_main_movement, int current_casilla, GLuint &
 	}
 }
 
+glm::vec3 get_main_light_position(float elapsed_time) {
+	float t = glm::clamp(elapsed_time / SEGUNDOS_PARA_CAMBIAR_DIA_NOCHE, 0.0f, 1.0f);
+	return glm::mix(glm::vec3(-8.0f, -1.0f, 0.0f), glm::vec3(8.0f, -1.0f, 0.0f), t); // Interpolación lineal
+}
+
+
 
 int main()
 {
@@ -663,8 +725,10 @@ int main()
 	island.LoadModel("Models/isla4.obj");
 	ocean.LoadModel("Models/mar.obj");
 
+	Ovni.LoadModel("Models/probeufo.obj");
+
 	copter.LoadModel("Models/cop.obj");
-	copter.load_animation_parameters(VEHICLES_DISTANCE_CORNER, 0.0f, 90.0f, 2);
+	copter.load_animation_parameters(VEHICLES_DISTANCE_CORNER, 5.0f, 90.0f, 2);
 	Helices.LoadModel("Models/helices.obj");
 
 	Barco.LoadModel("Models/barco.obj");
@@ -723,19 +787,20 @@ int main()
 
 	//luz direccional, solo 1 y siempre debe de existir
 	main_light_noche = DirectionalLight(1.0f, 1.0f, 1.0f,
-		0.3f, 0.3f,
-		0.0f, 0.0f, -1.0f);
+		0.08f, 0.08f,
+		0.0f, -1.0f, 0.0f);
 	main_light_dia = DirectionalLight(1.0f, 0.9f, 0.9f,
 		0.5f, 0.5f,
-		0.0f, -1.0f, -0.5f);
+		0.0f, -1.0f, 0.0f);
 
 	//contador de luces puntuales
 	unsigned int pointLightCount = 0;
-	//Declaraci�n de primer luz puntual
-	pointLights[0] = PointLight(1.0f, 0.0f, 0.0f,
-		0.0f, 1.0f,
-		-6.0f, 1.5f, 1.5f,
-		0.3f, 0.2f, 0.1f);
+
+	//Luz para el personaje principal
+	pointLights[0] = PointLight(1.0f, 1.0f, 1.0f,
+		0.5f, 1.5f,
+		0.0f, 0.0f, 0.0f,
+		1.0f, 0.025f, 0.015f);
 	pointLightCount++;
 
 	unsigned int spotLightCount = 0;
@@ -748,13 +813,22 @@ int main()
 		5.0f);
 	spotLightCount++;*/
 
-	//luz fija
-	spotLights[0] = SpotLight(0.0f, 0.0f, 1.0f,
+	//Ovni 1
+	spotLights[0] = SpotLight(0.0f, 1.0f, 0.0f,
 		1.0f, 2.0f,
 		0.0f, 22.0f, 0.0f,
 		0.0f, -1.0f, 0.0f,
 		1.0f, 0.0f, 0.0f,
 		15.0f);
+	spotLightCount++;
+
+	spotLights[1] = spotLights[0];
+	spotLightCount++;
+
+	spotLights[2] = spotLights[0];
+	spotLightCount++;
+
+	spotLights[3] = spotLights[0];
 	spotLightCount++;
 
 	//se crean mas luces puntuales y spotlight 
@@ -791,6 +865,10 @@ int main()
 	info_dados.side_limit = 32.0f;
 
 	std::srand(static_cast<unsigned int>(std::time(0)));
+
+	//Ovnis
+	float ovni_rotate = 0;
+	float velocidad_rotate_ovni = 2.0f;
 
 	glfwSetTime(0);
 
@@ -843,14 +921,24 @@ int main()
 		//spotLights[0].SetFlash(lowerLight, camera.getCameraDirection()); linterna
 
 		//informacion al shader de fuentes de iluminaci�n
-		if (dia)
+		if (dia) {
+			float elapsed_time = SEGUNDOS_PARA_CAMBIAR_DIA_NOCHE - (change_ambientacion - now);
+			
+			glm::vec3 light_position = get_main_light_position(elapsed_time);
+			main_light_dia.SetDirection(light_position);
 			shaderList[0].SetDirectionalLight(&main_light_dia);
-		else
+		}
+		else {
+			/*float elapsed_time = SEGUNDOS_PARA_CAMBIAR_DIA_NOCHE - (change_ambientacion - now);
+
+			glm::vec3 light_position = get_main_light_position(elapsed_time);
+			main_light_noche.SetDirection(light_position);*/
 			shaderList[0].SetDirectionalLight(&main_light_noche);
-
-		//shaderList[0].SetPointLights(pointLights, pointLightCount); linterna
-		shaderList[0].SetSpotLights(spotLights, spotLightCount);
-
+		}
+		
+		manage_lights(dia);
+		shaderList[0].SetPointLights(current_points_lights, current_num_points_lights);//luz chopper
+		shaderList[0].SetSpotLights(current_spot_lights, current_num_spots_lights);
 
 		//INICIO DE CREACION DE MODELOS
 		
@@ -894,12 +982,12 @@ int main()
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(copter.ubi_model.x, copter.ubi_model.y, copter.ubi_model.z));
 		model = glm::rotate(model, glm::radians(copter.current_rotate), glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::translate(model, glm::vec3(-copter.mov_model, 0.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(-copter.mov_model_side, 0.0f, 0.0f));
 		
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		copter.RenderModel();
 
-		float heli = copter.mov_model * 10;
+		float heli = copter.mov_model_side * 10;
 		model = glm::translate(model, glm::vec3(1.0f, 2.6f, 0.0f));
 		model = glm::rotate(model, glm::radians(heli), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -911,7 +999,7 @@ int main()
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(Barco.ubi_model.x, Barco.ubi_model.y, Barco.ubi_model.z));
 		model = glm::rotate(model, glm::radians(Barco.current_rotate), glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::translate(model, glm::vec3(Barco.mov_model, 0.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(Barco.mov_model_side, 0.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
 
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -919,7 +1007,7 @@ int main()
 
 		model_aux = model;
 
-		float mov_rueda = Barco.mov_model * -10;
+		float mov_rueda = Barco.mov_model_side * -10;
 		model = glm::translate(model, glm::vec3(-19.0f, 5.0f, 12.0f));
 		model = glm::rotate(model, glm::radians(mov_rueda), glm::vec3(0.0f, 0.0f, 1.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -940,10 +1028,10 @@ int main()
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z));
 		model = glm::rotate(model, glm::radians(main_character.current_rotate), glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, main_character.mov_model));
-		spotLights[0].SetPos(glm::vec3(model[3][0], 30.0f, model[3][2]));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, main_character.mov_model_side));
+		pointLights[0].set_position(glm::vec3(model[3][0], 6.0f, model[3][2]));
 
-		model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		main_character.RenderModel();
 
@@ -970,6 +1058,37 @@ int main()
 		model = glm::rotate(model, glm::radians(info_main_character.mov_extremidades), glm::vec3(1.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		main_brazo_izquierdo.RenderModel();
+
+		//Luces en las 4 esquinas
+		//Ovni 1 inicio
+		ovni_rotate += velocidad_rotate_ovni * deltaTime;
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-MAIN_DISTANCE_CORNER, ALTURA_OVNIS, MAIN_DISTANCE_CORNER));
+		spotLights[0].SetPos(glm::vec3(model[3][0], model[3][1] + 1.0f, model[3][2]));
+		model = glm::rotate(model, glm::radians(ovni_rotate), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Ovni.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-MAIN_DISTANCE_CORNER, ALTURA_OVNIS, -MAIN_DISTANCE_CORNER));
+		spotLights[1].SetPos(glm::vec3(model[3][0], model[3][1] + 1.0f, model[3][2]));
+		model = glm::rotate(model, glm::radians(ovni_rotate), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Ovni.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(MAIN_DISTANCE_CORNER, ALTURA_OVNIS, -MAIN_DISTANCE_CORNER));
+		spotLights[2].SetPos(glm::vec3(model[3][0], model[3][1] + 1.0f, model[3][2]));
+		model = glm::rotate(model, glm::radians(ovni_rotate), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Ovni.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(MAIN_DISTANCE_CORNER, ALTURA_OVNIS, MAIN_DISTANCE_CORNER));
+		spotLights[3].SetPos(glm::vec3(model[3][0], model[3][1] + 1.0f, model[3][2]));
+		model = glm::rotate(model, glm::radians(ovni_rotate), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Ovni.RenderModel();
 
 
 		//Dados

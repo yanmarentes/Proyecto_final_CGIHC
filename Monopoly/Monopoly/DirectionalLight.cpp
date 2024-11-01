@@ -25,3 +25,7 @@ void DirectionalLight::UseLight(GLfloat ambientIntensityLocation, GLfloat ambien
 DirectionalLight::~DirectionalLight()
 {
 }
+
+void DirectionalLight::SetDirection(glm::vec3 ligh_position) {
+	direction = ligh_position;
+}

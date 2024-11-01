@@ -200,7 +200,7 @@ void ModelSquareMovement::load_animation_parameters(float distance_corner, float
 	}
 	
 	
-	mov_model = 0.0f;
+	mov_model_side = 0.0f;
 	mov_model_total = 0.0f;
 
 	num_turn = 0;
@@ -208,9 +208,9 @@ void ModelSquareMovement::load_animation_parameters(float distance_corner, float
 
 void ModelSquareMovement::set_move(float mov) {
 
-	if (mov_model >= movement_limit) {
+	if (mov_model_side >= movement_limit) {
 
-		mov_model = 0;
+		mov_model_side = 0;
 		current_rotate = current_rotate - addition_rotate;
 
 		switch (side) {
@@ -237,7 +237,7 @@ void ModelSquareMovement::set_move(float mov) {
 		}
 	}
 
-	mov_model += mov;
+	mov_model_side += mov;
 	mov_model_since_tirada += mov;
 	mov_model_total += mov;
 }
