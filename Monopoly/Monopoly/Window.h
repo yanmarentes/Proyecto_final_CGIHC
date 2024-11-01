@@ -13,6 +13,7 @@ public:
 	GLfloat getBufferHeight() { return bufferHeight; }
 	GLfloat getXChange();
 	GLfloat getYChange();
+	GLint getTipoCamara() { return tipoCamara; }
 	GLfloat getrotx() { return rotx; }
 	GLfloat getroty() { return roty; }
 	GLfloat getrotz() { return rotz; }
@@ -39,6 +40,7 @@ private:
 	GLfloat rotx;
 	GLfloat roty;
 	GLfloat rotz;
+	GLint tipoCamara;
 
 	GLfloat angulocofre = 0.0f;
 	GLboolean tirar_dado;

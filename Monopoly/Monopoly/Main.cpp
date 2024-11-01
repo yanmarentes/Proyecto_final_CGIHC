@@ -46,11 +46,62 @@ Window mainWindow;
 std::vector<Mesh*> meshList;
 std::vector<Shader> shaderList;
 
+//Camaras a usar
 Camera camera;
+Camera* currentCamera;
+Camera camaraAvatar;
+Camera camaraLibre;
+Camera camaraAerea;
+Camera camaraEstatica;
+
+glm::vec3 camPos(0.0f);
+glm::vec4 camoffset(0.0f, 15.0f, 40.0f, 1.0f);
+glm::vec4 camoffset1(0.0f, 0.0f, 90.0f, 0.0f);
+glm::mat4 camRot(1.0);
 
 Texture piso_texture_dia;
 Texture piso_texture_noche;
 Texture dadoTexture;
+Texture casilla1;
+Texture casilla2;
+Texture casilla3;
+Texture casilla4;
+Texture casilla5;
+Texture casilla6;
+Texture casilla7;
+Texture casilla8;
+Texture casilla9;
+Texture casilla10;
+Texture casilla11;
+Texture casilla12;
+Texture casilla13;
+Texture casilla14;
+Texture casilla15;
+Texture casilla16;
+Texture casilla17;
+Texture casilla18;
+Texture casilla19;
+Texture casilla20;
+Texture casilla21;
+Texture casilla22;
+Texture casilla23;
+Texture casilla24;
+Texture casilla25;
+Texture casilla26;
+Texture casilla27;
+Texture casilla28;
+Texture casilla29;
+Texture casilla30;
+Texture casilla31;
+Texture casilla32;
+Texture casilla33;
+Texture casilla34;
+Texture casilla35;
+Texture casilla36;
+Texture casilla37;
+Texture casilla38;
+Texture casilla39;
+
 
 ModelSquareMovement main_character;
 Model main_brazo_derecho;
@@ -121,6 +172,7 @@ static const char* vShader = "shaders/shader_light.vert";
 // Fragment Shader
 static const char* fShader = "shaders/shader_light.frag";
 
+//void IniciarCamaras();
 
 //funci�n de calculo de normales por promedio de v�rtices 
 void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat* vertices, unsigned int verticeCount,
@@ -290,6 +342,53 @@ void CrearDado()
 
 }
 
+void IniciarCamaras() {
+
+	//camRot = glm::rotate(camRot, glm::radians(main_character.current_rotate), glm::vec3(0.0f, 1.0f, 0.0f));
+	//camPos = glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z) + glm::vec3(camRot * camoffset);
+	camPos = glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z);
+
+	camaraAvatar = Camera(camPos, glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 1.0f, -1.0f); //
+	camaraAerea = Camera(glm::vec3(0.0f, 150.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, -90.0f, 8.5f, 0.0f);
+	camaraLibre = Camera(glm::vec3(0.0f, 200.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, -45.0f, 5.5f, 0.5f);
+	camaraEstatica = Camera(glm::vec3(-150.0f, 150.0f, 130.0f), glm::vec3(0.0f, 1.0f, 0.0f), -45.0f, -45.0f, 8.5f, 0.0f);
+
+
+	currentCamera = &camaraLibre;
+}
+
+
+
+void setCamera(GLint cameraNumber) {
+
+	//camRot = glm::rotate(camRot, glm::radians(main_character.current_rotate), glm::vec3(0.0f, 1.0f, 0.0f));
+	//camPos = glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z) + glm::vec3(camRot * camoffset);
+	//camRot = glm::rotate(camRot, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	//camPos = glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z - main_character.mov_model) + glm::vec3(camRot * camoffset1);
+	camPos = glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z - main_character.mov_model);
+
+	switch (cameraNumber) {
+	case 1:
+		camaraAvatar.setPosicionX(camPos.x + camoffset.x);
+		camaraAvatar.setPosicionY(camPos.y + camoffset.y);
+		camaraAvatar.setPosicionZ(camPos.z + camoffset.z);
+		currentCamera = &camaraAvatar;
+		break;
+	case 2:
+		camaraAerea.keyControlAerea(mainWindow.getsKeys(), deltaTime);
+		currentCamera = &camaraAerea;
+		break;
+	case 3:
+		currentCamera = &camaraEstatica;
+		break;
+	case 4:
+		camaraLibre.keyControl(mainWindow.getsKeys(), deltaTime);
+		camaraLibre.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
+		currentCamera = &camaraLibre;
+		break;
+	}
+}
+
 
 void CreateShaders()
 {
@@ -319,7 +418,7 @@ void render_current_model(int state_main_movement, int current_casilla, GLuint &
 		}
 		break;
 	case 2: // Girando hacia arriba
-		modelRotation += 45.0f * (deltaTime / 8); // 360 grados por segundo
+		modelRotation += 45.0f * (deltaTime / 8);
 		if (modelRotation >= 360.0f) {
 			modelRotation = 0.0f;
 			modelstate = 3; // Regresa a bajando
@@ -340,281 +439,556 @@ void render_current_model(int state_main_movement, int current_casilla, GLuint &
 	if (state_main_movement == STATE_REPOSO) {
 		glm::mat4 model(1.0);
 
+		glm::mat4 modelCasilla(1.0);
+
+
 		switch (current_casilla) {
 		case 1:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 16.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - main_character.mov_model));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			ark_maxim.RenderModel();
+
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z - main_character.mov_model));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(1.1f, 1.2f, 0.65f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla1.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 2:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 32.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - main_character.mov_model));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			hito.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z - main_character.mov_model));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(1.1f, 1.2f, 0.65f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla2.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		
 		case 3:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 45.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - main_character.mov_model));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			merry.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z - main_character.mov_model));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(1.1f, 1.2f, 0.65f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla3.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 4:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 58.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - main_character.mov_model));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			laboon.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z - main_character.mov_model));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(1.1f, 1.2f, 0.65f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla4.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 5:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 71.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - main_character.mov_model));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			nami.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z - main_character.mov_model));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(1.1f, 1.2f, 0.65f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla5.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 6:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 82.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - main_character.mov_model));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			mera.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z - main_character.mov_model));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(1.1f, 1.2f, 0.65f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla6.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 7:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 97.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - main_character.mov_model));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			Luffy.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z - main_character.mov_model));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(1.1f, 1.2f, 0.65f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla7.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 8:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 105.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - main_character.mov_model));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			ope.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z - main_character.mov_model));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(1.1f, 1.2f, 0.65f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla8.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 9:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 118.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - main_character.mov_model));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			ace.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z - main_character.mov_model));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(1.1f, 1.2f, 0.65f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla9.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 10:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - main_character.mov_model - 18.0f));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			ship.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z - main_character.mov_model));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(1.1f, 1.2f, 1.1f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla10.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 11:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 32.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + main_character.mov_model, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 18.0f));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
-			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+			model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			zoro.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x + main_character.mov_model, main_character.ubi_model.y, main_character.ubi_model.z));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(0.65f, 1.2f, 1.1f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla11.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 12:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 45.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + main_character.mov_model, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 18.0f));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
-			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			model = glm::scale(model, glm::vec3(4.5f, 4.5f, 4.5f));
+			modelCasilla = glm::rotate(modelCasilla, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			gomu.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x + main_character.mov_model, main_character.ubi_model.y, main_character.ubi_model.z));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(0.65f, 1.2f, 1.1f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla12.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 13:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 58.0f));
-			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + main_character.mov_model, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 18.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			moby_dick.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x + main_character.mov_model, main_character.ubi_model.y, main_character.ubi_model.z));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(0.65f, 1.2f, 1.1f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla3.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 14:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 71.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + main_character.mov_model, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 18.0f));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			Luffy.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x + main_character.mov_model, main_character.ubi_model.y, main_character.ubi_model.z));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(0.65f, 1.2f, 1.1f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla14.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 15:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 82.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + main_character.mov_model, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 18.0f));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			Luffy.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x + main_character.mov_model, main_character.ubi_model.y, main_character.ubi_model.z));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(0.65f, 1.2f, 1.1f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla15.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 16:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 97.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + main_character.mov_model, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 18.0f));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			Luffy.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x + main_character.mov_model, main_character.ubi_model.y, main_character.ubi_model.z));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(0.65f, 1.2f, 1.1f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla16.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 17:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 105.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + main_character.mov_model, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 18.0f));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			Luffy.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x + main_character.mov_model, main_character.ubi_model.y, main_character.ubi_model.z));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(0.65f, 1.2f, 1.1f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla17.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 18:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 118.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + main_character.mov_model, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 18.0f));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			Luffy.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x + main_character.mov_model, main_character.ubi_model.y, main_character.ubi_model.z));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(0.65f, 1.2f, 1.1f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla18.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 19:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + main_character.mov_model, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 18.0f));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			Luffy.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x + main_character.mov_model, main_character.ubi_model.y, main_character.ubi_model.z));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(0.65f, 1.2f, 1.1f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla19.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 20:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - main_character.mov_model));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			Luffy.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x + main_character.mov_model, main_character.ubi_model.y, main_character.ubi_model.z));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(1.1f, 1.2f, 1.1f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla20.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 21:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z + main_character.mov_model));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			Luffy.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z + main_character.mov_model));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(1.1f, 1.2f, 0.65f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla21.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 22:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z + main_character.mov_model));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			Luffy.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z + main_character.mov_model));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(1.1f, 1.2f, 0.65f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla22.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 23:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z + main_character.mov_model));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			Luffy.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z + main_character.mov_model));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(1.1f, 1.2f, 0.65f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla23.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 24:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z + main_character.mov_model));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			Luffy.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z + main_character.mov_model));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(1.1f, 1.2f, 0.65f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla24.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 25:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z + main_character.mov_model));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			Luffy.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z + main_character.mov_model));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(1.1f, 1.2f, 0.65f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla25.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 26:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z + main_character.mov_model));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
-			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			shaymin.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z + main_character.mov_model));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(1.1f, 1.2f, 0.65f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla26.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 27:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z + main_character.mov_model));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			//model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			center.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z + main_character.mov_model));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(1.1f, 1.2f, 0.65f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla27.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 28:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z + main_character.mov_model));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
-			//model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
-
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			piplup.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z + main_character.mov_model));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(1.1f, 1.2f, 0.65f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla28.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 29:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z + main_character.mov_model));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			//model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			joy.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z + main_character.mov_model));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(1.1f, 1.2f, 0.65f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla29.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 30:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - main_character.mov_model, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z + 18.0f));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			lucario.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z + main_character.mov_model));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(1.1f, 1.2f, 1.1f)); 
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla30.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 31:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - main_character.mov_model, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z + 18.0f));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			//model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			league.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x - main_character.mov_model, main_character.ubi_model.y, main_character.ubi_model.z));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(0.65f, 1.2f, 1.1f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla31.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 32:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - main_character.mov_model, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z + 18.0f));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			Lectro.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x - main_character.mov_model, main_character.ubi_model.y, main_character.ubi_model.z));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(0.65f, 1.2f, 1.1f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla32.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 33:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - main_character.mov_model, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z + 18.0f));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			barry.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x - main_character.mov_model, main_character.ubi_model.y, main_character.ubi_model.z));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(0.65f, 1.2f, 1.1f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla33.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 34:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - main_character.mov_model, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z + 18.0f));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			garchomp.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x - main_character.mov_model, main_character.ubi_model.y, main_character.ubi_model.z));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(0.65f, 1.2f, 1.1f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla34.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 35:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - main_character.mov_model, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z + 18.0f));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			baya_latano.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x - main_character.mov_model, main_character.ubi_model.y, main_character.ubi_model.z));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(0.65f, 1.2f, 1.1f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla35.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 36:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - main_character.mov_model, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z + 18.0f));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			dawn.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x - main_character.mov_model, main_character.ubi_model.y, main_character.ubi_model.z));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(0.65f, 1.2f, 1.1f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla36.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 37:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - main_character.mov_model, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z + 18.0f));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			baya_frambu.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x - main_character.mov_model, main_character.ubi_model.y, main_character.ubi_model.z));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(0.65f, 1.2f, 1.1f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla37.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 38:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - main_character.mov_model, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z + 18.0f));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			casa_hoja_verde.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x - main_character.mov_model, main_character.ubi_model.y, main_character.ubi_model.z));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(0.65f, 1.2f, 1.1f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla38.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		case 39:
-			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 16.8f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 14.0f));
+			model = glm::translate(model, glm::vec3(main_character.ubi_model.x - main_character.mov_model, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z + 18.0f));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			oran_berry.RenderModel();
+
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
+			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x - main_character.mov_model, main_character.ubi_model.y, main_character.ubi_model.z));
+			modelCasilla = glm::scale(modelCasilla, glm::vec3(0.65f, 1.2f, 1.1f));
+			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
+			casilla39.UseTexture();
+			meshList[2]->RenderMesh();
 			break;
 		default:
 			break;
@@ -631,17 +1005,59 @@ int main()
 	CreateObjects();
 	CreateShaders();
 	CrearDado();
+	IniciarCamaras();
 
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.5f);
 
 	// +++++++++++++++++++++++++++++++++Texturas+++++++++++++++++++++++++++++++
-	piso_texture_dia = Texture("Textures/monopoly.tga");
+	piso_texture_dia = Texture("Textures/monopoly.png");
 	piso_texture_dia.LoadTextureA();
-	piso_texture_noche = Texture("Textures/monopoly_noche.jpg");
+	piso_texture_noche = Texture("Textures/monopoly_noche.png");
 	piso_texture_noche.LoadTextureA();
 	dadoTexture = Texture("Textures/dado10caras.png");
 	dadoTexture.LoadTextureA();
 
+	
+	//Casillas
+	casilla1 = Texture("Textures/casilla1.png"); casilla1.LoadTextureA();
+	casilla2 = Texture("Textures/casilla2.png"); casilla2.LoadTextureA();
+	casilla3 = Texture("Textures/casilla3.png"); casilla3.LoadTextureA();
+	casilla4 = Texture("Textures/casilla4.png"); casilla4.LoadTextureA();
+	casilla5 = Texture("Textures/casilla5.png"); casilla5.LoadTextureA();
+	casilla6 = Texture("Textures/casilla6.png"); casilla6.LoadTextureA();
+	casilla7 = Texture("Textures/casilla7.png"); casilla7.LoadTextureA();
+	casilla8 = Texture("Textures/casilla8.png"); casilla8.LoadTextureA();
+	casilla9 = Texture("Textures/casilla9.png"); casilla9.LoadTextureA();
+	casilla10 = Texture("Textures/casilla10.png"); casilla10.LoadTextureA();
+	casilla11 = Texture("Textures/casilla11.png"); casilla11.LoadTextureA();
+	casilla12 = Texture("Textures/casilla12.png"); casilla12.LoadTextureA();
+	casilla13 = Texture("Textures/casilla13.png"); casilla13.LoadTextureA();
+	casilla14 = Texture("Textures/casilla14.png"); casilla14.LoadTextureA();
+	casilla15 = Texture("Textures/casilla15.png"); casilla15.LoadTextureA();
+	casilla16 = Texture("Textures/casilla16.png"); casilla16.LoadTextureA();
+	casilla17 = Texture("Textures/casilla17.png"); casilla17.LoadTextureA();
+	casilla18 = Texture("Textures/casilla18.png"); casilla18.LoadTextureA();
+	casilla19 = Texture("Textures/casilla19.png"); casilla19.LoadTextureA();
+	casilla20 = Texture("Textures/casilla20.png"); casilla20.LoadTextureA();
+	casilla21 = Texture("Textures/casilla21.png"); casilla21.LoadTextureA();
+	casilla22 = Texture("Textures/casilla22.png"); casilla22.LoadTextureA();
+	casilla23 = Texture("Textures/casilla23.png"); casilla23.LoadTextureA();
+	casilla24 = Texture("Textures/casilla24.png"); casilla24.LoadTextureA();
+	casilla25 = Texture("Textures/casilla25.png"); casilla25.LoadTextureA();
+	casilla26 = Texture("Textures/casilla26.png"); casilla26.LoadTextureA();
+	casilla27 = Texture("Textures/casilla27.png"); casilla27.LoadTextureA();
+	casilla28 = Texture("Textures/casilla28.png"); casilla28.LoadTextureA();
+	casilla29 = Texture("Textures/casilla29.png"); casilla29.LoadTextureA();
+	casilla30 = Texture("Textures/casilla30.png"); casilla30.LoadTextureA();
+	casilla31 = Texture("Textures/casilla31.png"); casilla31.LoadTextureA();
+	casilla32 = Texture("Textures/casilla32.png"); casilla32.LoadTextureA();
+	casilla33 = Texture("Textures/casilla33.png"); casilla33.LoadTextureA();
+	casilla34 = Texture("Textures/casilla34.png"); casilla34.LoadTextureA();
+	casilla35 = Texture("Textures/casilla35.png"); casilla35.LoadTextureA();
+	casilla36 = Texture("Textures/casilla36.png"); casilla36.LoadTextureA();
+	casilla37 = Texture("Textures/casilla37.png"); casilla37.LoadTextureA();
+	casilla38 = Texture("Textures/casilla38.png"); casilla38.LoadTextureA();
+	casilla39 = Texture("Textures/casilla39.png"); casilla39.LoadTextureA();
 	// +++++++++++++++++++++++++++++++ Modelos ++++++++++++++++++++++++++++++++
 	main_character.LoadModel("Models/chopper_sin_extremidades.obj");
 	main_character.load_animation_parameters(MAIN_DISTANCE_CORNER, -0.7f, 180.0f, 0);
@@ -691,12 +1107,13 @@ int main()
 
 	// +++++++++++++++++++++++++skybox+++++++++++++++++++++++++++++++++++++++++
 	std::vector<std::string> skyboxFaces;
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_rt.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_lf.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_dn.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_up.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_bk.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_ft.tga");
+	skyboxFaces.push_back("Textures/Skybox/cupertin-lake-night_rt.png");
+	skyboxFaces.push_back("Textures/Skybox/cupertin-lake-night_ft.png");
+	skyboxFaces.push_back("Textures/Skybox/cupertin-lake-night_dn.png");
+	skyboxFaces.push_back("Textures/Skybox/cupertin-lake-night_up.png");
+	skyboxFaces.push_back("Textures/Skybox/cupertin-lake-night_bk.png");
+	skyboxFaces.push_back("Textures/Skybox/cupertin-lake-night_lf.png");
+
 
 	skybox = Skybox(skyboxFaces);
 
@@ -789,13 +1206,16 @@ int main()
 
 		//Recibir eventos del usuario
 		glfwPollEvents();
+
+		setCamera(mainWindow.getTipoCamara());
+
 		camera.keyControl(mainWindow.getsKeys(), deltaTime);
 		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
 
 		// Clear the window
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		skybox.DrawSkybox(camera.calculateViewMatrix(), projection);
+		skybox.DrawSkybox((*currentCamera).calculateViewMatrix(), projection);
 		shaderList[0].UseShader();
 		uniformModel = shaderList[0].GetModelLocation();
 		uniformProjection = shaderList[0].GetProjectionLocation();
@@ -808,8 +1228,8 @@ int main()
 		uniformShininess = shaderList[0].GetShininessLocation();
 
 		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
-		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
-		glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
+		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr((*currentCamera).calculateViewMatrix()));
+		glUniform3f(uniformEyePosition, (*currentCamera).getCameraPosition().x, (*currentCamera).getCameraPosition().y, (*currentCamera).getCameraPosition().z);
 
 		// luz ligada a la c�mara de tipo flash
 		//sirve para que en tiempo de ejecuci�n (dentro del while) se cambien propiedades de la luz
