@@ -57,6 +57,8 @@ Model main_brazo_derecho;
 Model main_brazo_izquierdo;
 Model main_pierna_derecha;
 Model main_pierna_izquierda;
+Model island;
+Model ocean;
 ModelSquareMovement copter;
 Model Helices;
 ModelSquareMovement Barco;
@@ -658,12 +660,15 @@ int main()
 	main_pierna_derecha.LoadModel("Models/chopper_pata_derecha.obj");
 	main_pierna_izquierda.LoadModel("Models/chopper_pata_izquierda.obj");
 
+	island.LoadModel("Models/isla4.obj");
+	ocean.LoadModel("Models/mar.obj");
+
 	copter.LoadModel("Models/cop.obj");
 	copter.load_animation_parameters(VEHICLES_DISTANCE_CORNER, 0.0f, 90.0f, 2);
 	Helices.LoadModel("Models/helices.obj");
 
 	Barco.LoadModel("Models/barco.obj");
-	Barco.load_animation_parameters(VEHICLES_DISTANCE_CORNER, 0.0f, 90.0f, 0);
+	Barco.load_animation_parameters(260, 0.0f, 90.0f, 0);
 	Rueda_barco.LoadModel("Models/rueda.obj");
 
 	Dado_4_caras.LoadModel("Models/avr_dado_4.obj");
@@ -867,6 +872,20 @@ int main()
 
 		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		meshList[2]->RenderMesh();
+
+		// Isla
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, -3.0f, 100.0f));
+		model = glm::scale(model, glm::vec3(4.5f, 1.0f, 4.5f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		island.RenderModel();
+
+		// Oceano
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, -5.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(30.0f, 1.0f, 30.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		ocean.RenderModel();
 
 
 		//Helicoptero Rodrigo
