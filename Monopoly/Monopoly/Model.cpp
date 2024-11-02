@@ -159,6 +159,9 @@ void Model::LoadMaterials(const aiScene * scene)
 }
 
 
+/**
+* Esta es la funcion para darle los parametros del movimeindo al modelo
+*/
 void ModelSquareMovement::load_animation_parameters(float distance_corner, float altura = 0.0f, float initial_rotate = 0.0f, int initial_corner = 0) {
 	addition_rotate = 90.0f;
 	current_rotate = 0.0f + initial_rotate;
@@ -206,6 +209,10 @@ void ModelSquareMovement::load_animation_parameters(float distance_corner, float
 	num_turn = 0;
 }
 
+/**
+* Aqui voy moviendo al personaje y maneja las 4 esquinas, si llega a 1 da vuelta
+* 
+*/
 void ModelSquareMovement::set_move(float mov) {
 
 	if (mov_model_side >= movement_limit) {

@@ -35,6 +35,10 @@ private:
 	std::vector<unsigned int>meshTotex;
 };
 
+/**
+* Cree esta funcion para crear modelos que vayan a utilizar un movimiento cuadrado asi como el personaje principal y los modelos externos
+* como el helicoptero y el barco
+*/
 class ModelSquareMovement : public Model {
 
 public:

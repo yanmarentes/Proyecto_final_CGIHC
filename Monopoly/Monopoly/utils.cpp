@@ -1,5 +1,10 @@
 #include "utils.h"
 
+/**
+* Esta funcion es estatica y lo que hace es calcular del punto donde se encuenta el personaje cuanto le falta para llegar a la casilla destino
+*
+* Return float, distancia a donde tiene que llegar
+*/
 static float distancia_entre_casillas(int cantidad_dado, int position_initial, ModelSquareMovement* main_character, int& meta_casilla) {
 	float real_distance = 0;
 	int real_position = position_initial + cantidad_dado;
@@ -24,6 +29,12 @@ static float distancia_entre_casillas(int cantidad_dado, int position_initial, M
 	return real_distance;
 }
 
+/**
+* Aqui se maneja la tecla T de que si esta en estado de reposo se empieza la secuencia de animacion y movimiento, en el caso que no este en reposo
+* solamente resetea la variable para poder detectar cuando se vuelva a presionar la tecla T
+*
+* Return mapa
+*/
 void manage_get_tirada_dado(Window* mainWindow, int &state_main_movement, Package_Info_Dado* info_dado) {
 	if (mainWindow->get_tirar_dado()) {
 		if (state_main_movement == STATE_REPOSO) {
@@ -40,6 +51,12 @@ void manage_get_tirada_dado(Window* mainWindow, int &state_main_movement, Packag
 	}
 }
 
+/**
+* Aqui maneja la logica de cuando se esta tirando el dado, revisa que llegue a un punto en cuestion "Y" de altura y luego se mueve a la derecha
+* Cuando acaba la animacion pone el estado en sacando numero aleatorio
+*
+* Return void
+*/
 void manage_tirando_dado(int &state_main_movement, ModelSquareMovement* main_character, Package_Info_Dado* info_dado, Package_Info_Main_Character* info_main_character, float sum_mov_dado) {
 	if (state_main_movement == STATE_TIRANDO_DADO) {
 
@@ -69,6 +86,13 @@ void manage_tirando_dado(int &state_main_movement, ModelSquareMovement* main_cha
 	}
 }
 
+/**
+* Esta funcion lo que hace es que si esta el juego en el estado de ejecutando tirada y ya llego a la casilla donde le tocaba se detiene y
+* resetea todas las variables y pone en estado de resposo, en caso que aun no llegue sigue moviendo el personaje y le de movimiento a 
+* piernas y brazos
+*
+* Return void
+*/
 void manage_ejecutando_tirada(int &state_main_movement, ModelSquareMovement* main_character, Package_Info_Main_Character* info_main_character, int &modelstate, GLfloat delta_time) {
 	if (state_main_movement == STATE_EJECUTANDO_TIRADA_DADO) {
 		if (main_character->mov_model_total >= info_main_character->real_distance) {
@@ -97,6 +121,11 @@ void manage_ejecutando_tirada(int &state_main_movement, ModelSquareMovement* mai
 	}
 }
 
+/**
+* Funcion que regresa un mapa con las rotaciones necesarias para que cada cara quede hacia arriba
+*
+* Return mapa
+*/
 std::map<int, glm::vec3> crear_rotaciones_dado() {
 	std::map<int, glm::vec3> mapa;
 
@@ -114,6 +143,11 @@ std::map<int, glm::vec3> crear_rotaciones_dado() {
 	return mapa;
 }
 
+/**
+* Funcion que regresa un mapa con las rotaciones necesarias para que cada cara quede hacia arriba
+* 
+* Return mapa
+*/
 std::map<int, glm::vec3> crear_rotaciones_dado_8_caras() {
 	std::map<int, glm::vec3> mapa;
 

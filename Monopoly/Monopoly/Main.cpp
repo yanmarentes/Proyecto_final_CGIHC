@@ -215,6 +215,13 @@ void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat
 	}
 }
 
+/**
+*  Funcion que es para controlar las luces de las esquinas incluyendo la del personaje principal
+* Hay una secuencia de condiciones que lo que hace es modificar los arreglos de light que se mandan al shader. En el caso que no sea de nodche
+* no se manda ninguna luz al shader
+*
+* Return void
+*/
 void manage_lights(bool &dia) {
 	current_num_spots_lights = 0;
 	current_num_points_lights = 0;
@@ -1090,6 +1097,11 @@ void render_current_model(int state_main_movement, int current_casilla, GLuint &
 	}
 }
 
+/**
+* Esta funcion regresa donde deberia de estar posicionado el sol con respecto al momento del dia
+* 
+* 
+*/
 glm::vec3 get_main_light_position(float elapsed_time) {
 	float t = glm::clamp(elapsed_time / SEGUNDOS_PARA_CAMBIAR_DIA_NOCHE, 0.0f, 1.0f);
 	return glm::mix(glm::vec3(-8.0f, -1.0f, 0.0f), glm::vec3(8.0f, -1.0f, 0.0f), t); // Interpolación lineal
