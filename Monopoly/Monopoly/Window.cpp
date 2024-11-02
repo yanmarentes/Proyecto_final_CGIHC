@@ -17,6 +17,7 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 	roty = 0.0f;
 	rotz = 0.0f;
 	tirar_dado = false;
+	tipoCamara = 1;
 
 	for (size_t i = 0; i < 1024; i++)
 	{
@@ -137,6 +138,32 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	if (key == GLFW_KEY_T && action == GLFW_PRESS)
 	{
 		theWindow->tirar_dado = true;
+	}
+
+	if (key == GLFW_KEY_Q)
+	{
+		if (action == GLFW_PRESS) {
+			switch (theWindow->tipoCamara) {
+			case 1:
+				theWindow->tipoCamara = 2;
+				break;
+
+			case 2:
+				theWindow->tipoCamara = 3;
+				break;
+
+			case 3:
+				theWindow->tipoCamara = 4;
+				break;
+			case 4:
+				theWindow->tipoCamara = 1;
+				break;
+
+			default:
+				theWindow->tipoCamara = 1;
+				break;
+			}
+		}
 	}
 
 	if (key >= 0 && key < 1024)
