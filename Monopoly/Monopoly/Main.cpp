@@ -154,7 +154,8 @@ Model estadio;
 Model casa_heeler;
 Model botella_vidrio;
 
-Skybox skybox;
+Skybox skybox_night;
+Skybox skybox_day;
 
 //materiales
 Material Material_brillante;
@@ -1185,16 +1186,25 @@ int main()
 	hito.LoadModel("Models/hito_hito.obj");
 
 	// +++++++++++++++++++++++++skybox+++++++++++++++++++++++++++++++++++++++++
-	std::vector<std::string> skyboxFaces;
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake-night_rt.png");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake-night_ft.png");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake-night_dn.png");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake-night_up.png");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake-night_bk.png");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake-night_lf.png");
+	std::vector<std::string> skyboxFaces_night;
+	skyboxFaces_night.push_back("Textures/Skybox/cupertin-lake-night_rt.png");
+	skyboxFaces_night.push_back("Textures/Skybox/cupertin-lake-night_ft.png");
+	skyboxFaces_night.push_back("Textures/Skybox/cupertin-lake-night_dn.png");
+	skyboxFaces_night.push_back("Textures/Skybox/cupertin-lake-night_up.png");
+	skyboxFaces_night.push_back("Textures/Skybox/cupertin-lake-night_bk.png");
+	skyboxFaces_night.push_back("Textures/Skybox/cupertin-lake-night_lf.png");
+
+	std::vector<std::string> skyboxFaces_day;
+	skyboxFaces_day.push_back("Textures/Skybox/cupertin-lake_rt.png");
+	skyboxFaces_day.push_back("Textures/Skybox/cupertin-lake_ft.png");
+	skyboxFaces_day.push_back("Textures/Skybox/cupertin-lake_dn.png");
+	skyboxFaces_day.push_back("Textures/Skybox/cupertin-lake_up.png");
+	skyboxFaces_day.push_back("Textures/Skybox/cupertin-lake_bk.png");
+	skyboxFaces_day.push_back("Textures/Skybox/cupertin-lake_lf.png");
 
 
-	skybox = Skybox(skyboxFaces);
+	skybox_night = Skybox(skyboxFaces_night);
+	skybox_day = Skybox(skyboxFaces_day);
 
 	Material_brillante = Material(4.0f, 256);
 	Material_opaco = Material(0.3f, 4);
@@ -1316,7 +1326,11 @@ int main()
 		// Clear the window
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		skybox.DrawSkybox((*currentCamera).calculateViewMatrix(), projection);
+		if (dia)
+			skybox_day.DrawSkybox((*currentCamera).calculateViewMatrix(), projection);
+		else
+			skybox_night.DrawSkybox((*currentCamera).calculateViewMatrix(), projection);
+
 		shaderList[0].UseShader();
 		uniformModel = shaderList[0].GetModelLocation();
 		uniformProjection = shaderList[0].GetProjectionLocation();
