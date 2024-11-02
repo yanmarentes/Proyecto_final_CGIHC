@@ -15,8 +15,6 @@
 #include <glm.hpp>
 #include <gtc\matrix_transform.hpp>
 #include <gtc\type_ptr.hpp>
-//para probar el importer
-//#include<assimp/Importer.hpp>
 
 #include "Window.h"
 #include "Mesh.h"
@@ -29,19 +27,16 @@
 #include "CommonValues.h"
 #include "utils.h"
 
-//para iluminaci�n
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
 #include "Material.h"
 #define ALTURA_OVNIS 30
-const float toRadians = 3.14159265f / 180.0f;
 
-//variables para animaci�n
 float movOffset;
-float modelPosY = -15.0f; // Posición vertical del cartel
-float modelRotation = 0.05f; // Rotación del cartel
-float modelSpeed = 0.1f; // Velocidad del movimiento
+float modelPosY = -15.0f;
+float modelRotation = 0.05f;
+float modelSpeed = 0.1f;
 
 Window mainWindow;
 std::vector<Mesh*> meshList;
@@ -156,7 +151,6 @@ Model botella_vidrio;
 Skybox skybox_night;
 Skybox skybox_day;
 
-//materiales
 Material Material_brillante;
 Material Material_opaco;
 
@@ -166,11 +160,10 @@ GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
 static double limitFPS = 1.0 / 60.0;
 
-// luz direccional
+// Luz direccional
 DirectionalLight main_light_noche;
 DirectionalLight main_light_dia;
 
-//para declarar varias luces de tipo pointlight
 PointLight pointLights[MAX_POINT_LIGHTS];
 SpotLight spotLights[MAX_SPOT_LIGHTS];
 SpotLight current_spot_lights[MAX_SPOT_LIGHTS];
@@ -186,7 +179,9 @@ static const char* fShader = "shaders/shader_light.frag";
 
 //void IniciarCamaras();
 
-//funci�n de calculo de normales por promedio de v�rtices 
+/**
+* Funcion para calcular las normales
+*/
 void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat* vertices, unsigned int verticeCount,
 	unsigned int vLength, unsigned int normalOffset)
 {
@@ -226,7 +221,6 @@ void manage_lights(bool &dia) {
 	current_num_spots_lights = 0;
 	current_num_points_lights = 0;
 
-	//12 y 103
 	if(!dia) {
 		switch (main_character.side) {
 		case 0:
@@ -1251,7 +1245,6 @@ int main()
 	Material_opaco = Material(0.3f, 4);
 
 
-	//luz direccional, solo 1 y siempre debe de existir
 	main_light_noche = DirectionalLight(1.0f, 1.0f, 1.0f,
 		0.08f, 0.08f,
 		0.0f, -1.0f, 0.0f);
@@ -1259,7 +1252,6 @@ int main()
 		0.5f, 0.5f,
 		0.0f, -1.0f, 0.0f);
 
-	//contador de luces puntuales
 	unsigned int pointLightCount = 0;
 
 	//Luz para el personaje principal
@@ -1270,14 +1262,6 @@ int main()
 	pointLightCount++;
 
 	unsigned int spotLightCount = 0;
-	//linterna
-	/*spotLights[0] = SpotLight(1.0f, 1.0f, 1.0f,
-		0.0f, 2.0f,
-		0.0f, 0.0f, 0.0f,
-		0.0f, -1.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		5.0f);
-	spotLightCount++;*/
 
 	//Ovni 1
 	spotLights[0] = SpotLight(0.0f, 1.0f, 0.0f,
@@ -1296,8 +1280,6 @@ int main()
 
 	spotLights[3] = spotLights[0];
 	spotLightCount++;
-
-	//se crean mas luces puntuales y spotlight 
 
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
 		uniformSpecularIntensity = 0, uniformShininess = 0;
@@ -1342,7 +1324,6 @@ int main()
 	GLfloat change_ambientacion = glfwGetTime() + SEGUNDOS_PARA_CAMBIAR_DIA_NOCHE;
 	bool dia = true;
 
-	////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose())
 	{
 
@@ -1356,7 +1337,6 @@ int main()
 			change_ambientacion = now + SEGUNDOS_PARA_CAMBIAR_DIA_NOCHE;
 		}
 
-		//Recibir eventos del usuario
 		glfwPollEvents();
 
 		setCamera(mainWindow.getTipoCamara());
@@ -1379,7 +1359,6 @@ int main()
 		uniformEyePosition = shaderList[0].GetEyePositionLocation();
 		uniformColor = shaderList[0].getColorLocation();
 
-		//informaci�n en el shader de intensidad especular y brillo
 		uniformSpecularIntensity = shaderList[0].GetSpecularIntensityLocation();
 		uniformShininess = shaderList[0].GetShininessLocation();
 
@@ -1387,13 +1366,6 @@ int main()
 		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr((*currentCamera).calculateViewMatrix()));
 		glUniform3f(uniformEyePosition, (*currentCamera).getCameraPosition().x, (*currentCamera).getCameraPosition().y, (*currentCamera).getCameraPosition().z);
 
-		// luz ligada a la c�mara de tipo flash
-		//sirve para que en tiempo de ejecuci�n (dentro del while) se cambien propiedades de la luz
-		//glm::vec3 lowerLight = camera.getCameraPosition();
-		//lowerLight.y -= 0.3f;
-		//spotLights[0].SetFlash(lowerLight, camera.getCameraDirection()); linterna
-
-		//informacion al shader de fuentes de iluminaci�n
 		if (dia) {
 			float elapsed_time = SEGUNDOS_PARA_CAMBIAR_DIA_NOCHE - (change_ambientacion - now);
 			
@@ -1410,7 +1382,7 @@ int main()
 		}
 		
 		manage_lights(dia);
-		shaderList[0].SetPointLights(current_points_lights, current_num_points_lights);//luz chopper
+		shaderList[0].SetPointLights(current_points_lights, current_num_points_lights); //luz chopper
 		shaderList[0].SetSpotLights(current_spot_lights, current_num_spots_lights);
 
 		//INICIO DE CREACION DE MODELOS
