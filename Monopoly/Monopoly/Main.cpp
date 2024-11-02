@@ -675,7 +675,7 @@ void render_current_model(int state_main_movement, int current_casilla, GLuint &
 		case 10:
 			model = glm::translate(model, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - main_character.mov_model_side - 18.0f));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
-			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			ship.RenderModel();
 
@@ -689,7 +689,7 @@ void render_current_model(int state_main_movement, int current_casilla, GLuint &
 		case 11:
 			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + main_character.mov_model_side, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 18.0f));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
-			model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+			model = glm::scale(model, glm::vec3(6.0f, 6.0f, 6.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			zoro.RenderModel();
 
