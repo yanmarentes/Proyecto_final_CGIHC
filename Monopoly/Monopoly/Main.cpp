@@ -697,7 +697,6 @@ void render_current_model(int state_main_movement, int current_casilla, GLuint &
 			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + main_character.mov_model_side, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 18.0f));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(4.5f, 4.5f, 4.5f));
-			modelCasilla = glm::rotate(modelCasilla, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			gomu.RenderModel();
 
@@ -710,6 +709,7 @@ void render_current_model(int state_main_movement, int current_casilla, GLuint &
 			break;
 		case 13:
 			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + main_character.mov_model_side, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 18.0f));
+			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			moby_dick.RenderModel();
@@ -718,7 +718,7 @@ void render_current_model(int state_main_movement, int current_casilla, GLuint &
 			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x + main_character.mov_model_side, main_character.ubi_model.y, main_character.ubi_model.z));
 			modelCasilla = glm::scale(modelCasilla, glm::vec3(0.65f, 1.2f, 1.1f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(modelCasilla));
-			casilla3.UseTexture();
+			casilla13.UseTexture();
 			meshList[2]->RenderMesh();
 			break;
 		case 14:
