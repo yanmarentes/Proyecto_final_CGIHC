@@ -2,6 +2,12 @@
 
 Camera::Camera() {}
 
+void Camera::set_yaw(GLfloat new_yaw) {
+	yaw = new_yaw;
+
+	update();
+}
+
 Camera::Camera(glm::vec3 startPosition, glm::vec3 startUp, GLfloat startYaw, GLfloat startPitch, GLfloat startMoveSpeed, GLfloat startTurnSpeed)
 {
 	position = startPosition;

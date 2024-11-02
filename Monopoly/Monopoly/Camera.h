@@ -25,6 +25,7 @@ public:
 	void setPosicionY(float posicionY) { position.y = posicionY; }
 	void setPosicionZ(float posicionZ) { position.z = posicionZ; }
 
+	void set_yaw(GLfloat yaw);
 
 	~Camera();
 

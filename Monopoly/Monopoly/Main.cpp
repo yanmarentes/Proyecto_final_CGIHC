@@ -56,7 +56,6 @@ Camera camaraAerea;
 Camera camaraEstatica;
 
 glm::vec3 camPos(0.0f);
-glm::vec4 camoffset(0.0f, 15.0f, 40.0f, 1.0f);
 glm::vec4 camoffset1(0.0f, 0.0f, 90.0f, 0.0f);
 glm::mat4 camRot(1.0);
 
@@ -430,13 +429,43 @@ void setCamera(GLint cameraNumber) {
 	//camPos = glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z) + glm::vec3(camRot * camoffset);
 	//camRot = glm::rotate(camRot, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	//camPos = glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z - main_character.mov_model_side) + glm::vec3(camRot * camoffset1);
-	camPos = glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z - main_character.mov_model_side);
+	float distance_between_char_cam = 40.0f;
 
 	switch (cameraNumber) {
 	case 1:
+		glm::vec3 camoffset(0.0f, 15.0f, 0.0f);
+
+		switch (main_character.side) {
+		case 0:
+			camPos = glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z - main_character.mov_model_side);
+			camoffset.x = 0.0f;
+			camoffset.z = distance_between_char_cam;
+			camaraAvatar.set_yaw(-90.0f);
+			break;
+		case 1:
+			camPos = glm::vec3(main_character.ubi_model.x + main_character.mov_model_side, main_character.ubi_model.y, main_character.ubi_model.z);
+			camoffset.x = -distance_between_char_cam;
+			camoffset.z = 0.0f;
+			camaraAvatar.set_yaw(0.0f);
+			break;
+		case 2:
+			camPos = glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z + main_character.mov_model_side);
+			camoffset.x = 0.0f;
+			camoffset.z = -distance_between_char_cam;
+			camaraAvatar.set_yaw(90.0f);
+			break;
+		case 3:
+			camPos = glm::vec3(main_character.ubi_model.x - main_character.mov_model_side, main_character.ubi_model.y, main_character.ubi_model.z);
+			camoffset.x = distance_between_char_cam;
+			camoffset.z = 0.0f;
+			camaraAvatar.set_yaw(180.0f);
+			break;
+		}
+
 		camaraAvatar.setPosicionX(camPos.x + camoffset.x);
 		camaraAvatar.setPosicionY(camPos.y + camoffset.y);
 		camaraAvatar.setPosicionZ(camPos.z + camoffset.z);
+
 		currentCamera = &camaraAvatar;
 		break;
 	case 2:
