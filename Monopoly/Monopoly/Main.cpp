@@ -102,7 +102,7 @@ Texture casilla37;
 Texture casilla38;
 Texture casilla39;
 Texture Letrero;
-Texture Letrero1;
+Texture Letrero_dos;
 
 
 ModelSquareMovement main_character;
@@ -1223,7 +1223,8 @@ int main()
 	casilla37 = Texture("Textures/casilla37.png"); casilla37.LoadTextureA();
 	casilla38 = Texture("Textures/casilla38.png"); casilla38.LoadTextureA();
 	casilla39 = Texture("Textures/casilla39.png"); casilla39.LoadTextureA();
-	Letrero = Texture("Textures/letrero.png");Letrero.LoadTextureA();
+	Letrero = Texture("Textures/letrero.png"); Letrero.LoadTextureA();
+	Letrero_dos = Texture("Textures/cartel_one_pi.png");Letrero.LoadTextureA();
 	// +++++++++++++++++++++++++++++++ Modelos ++++++++++++++++++++++++++++++++
 	main_character.LoadModel("Models/chopper_sin_extremidades.obj");
 	main_character.load_animation_parameters(MAIN_DISTANCE_CORNER, -0.7f, 180.0f, 0);
@@ -1624,8 +1625,7 @@ int main()
 		toffset = glm::vec2(toffsetflechau, toffsetflechav);
 		model = model_aux;
 		model = glm::scale(model, glm::vec3(6.0f, 1.5f, 1.0f));
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.1f));
-		model = glm::translate(model, glm::vec3(0.0f, cartelPosY, -0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, cartelPosY, 0.0f));
 		model = glm::rotate(model ,  90 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
 		model = glm::rotate(model, 180 * toRadians, glm::vec3(1.0f, 1.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(cartelRotation), glm::vec3(1.0f, 0.0f, 0.0f));
