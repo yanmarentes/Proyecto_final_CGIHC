@@ -1559,7 +1559,7 @@ int main()
 		model = glm::translate(model, glm::vec3(-58.0f, 0.0f, 67.0f));
 		model = glm::scale(model, glm::vec3(2.5f, 2.5f, 2.5f));
 		model_aux = model;
-		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		arco.RenderModel();
 
@@ -1573,8 +1573,8 @@ int main()
 		model = glm::scale(model, glm::vec3(1.0f, 1.4f, 5.0f));
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.1f));
 		model = glm::translate(model, glm::vec3(0.0f, cartelPosY, -0.0f));
-		model = glm::rotate(model, -90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, 180 * toRadians, glm::vec3(1.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(- 90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(1.0f, 1.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(cartelRotation), glm::vec3(1.0f, 0.0f, 0.0f));
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -1597,9 +1597,9 @@ int main()
 		toffset = glm::vec2(toffsetflechau, toffsetflechav);
 		model = model_aux;
 		model = glm::scale(model, glm::vec3(6.0f, 1.5f, 1.0f));
-		model = glm::translate(model, glm::vec3(0.0f, cartelPosY, 0.0f));
-		model = glm::rotate(model ,  90 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
-		model = glm::rotate(model, 180 * toRadians, glm::vec3(1.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.1f, cartelPosY, 0.0f));
+		model = glm::rotate(model ,  glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(1.0f, 1.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(cartelRotation), glm::vec3(1.0f, 0.0f, 0.0f));
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
