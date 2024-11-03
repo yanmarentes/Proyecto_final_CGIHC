@@ -9,7 +9,7 @@ static float distancia_entre_casillas(int cantidad_dado, int position_initial, M
 	float real_distance = 0;
 	int real_position = position_initial + cantidad_dado;
 
-	float distance_casillas[] = { 0.0f, 17.0f, 30.0f, 42.4, 55.2, 67.9f, 79.9, 92.6, 105.4, 118.2, 135, 151, 164.22, 177.32, 189.6, 202.30, 215, 227.25, 240,
+	float distance_casillas[] = { 0.0f, 17.0f, 30.0f, 42.4, 55.2, 67.9f, 79.9, 92.6, 105.4, 118.2, 135.0f, 152.0f, 164.22, 177.32, 189.6, 202.30, 215, 227.25, 240,
 								251.88, 270.5, 286.8, 299.3, 312, 325.11, 337.35, 349, 362, 375, 385.64, 405.16, 421.75, 434.4, 447.12, 459.67, 472.22,
 								485.06, 497.35, 509.9, 523.22 };
 
