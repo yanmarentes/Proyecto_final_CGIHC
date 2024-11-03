@@ -81,7 +81,7 @@ void manage_tirando_dado(int &state_main_movement, ModelSquareMovement* main_cha
 		sum_dados += num_aleat;
 		info_dado->rotacion_dado_4 = info_dado->map_rotaciones_4[num_aleat];
 
-		info_main_character->real_distance = distancia_entre_casillas(sum_dados, info_main_character->current_casilla, main_character, info_main_character->meta_casilla);
+		info_main_character->real_distance = distancia_entre_casillas(1, info_main_character->current_casilla, main_character, info_main_character->meta_casilla);
 		state_main_movement = STATE_EJECUTANDO_TIRADA_DADO;
 	}
 }

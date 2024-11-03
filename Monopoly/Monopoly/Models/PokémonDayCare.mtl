@@ -1,0 +1,52 @@
+# Blender 4.2.1 LTS MTL File: 'None'
+# www.blender.org
+
+newmtl h_kage_lm2
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 1
+map_Kd h_kage_lm2.png
+map_d h_kage_lm2.png
+
+newmtl h_mado_lm2
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 1
+map_Kd h_mado_lm2.png
+map_d h_mado_lm2.png
+
+newmtl r34_door1_lm1
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 1
+map_Kd r34_door1_lm1.png
+map_d r34_door1_lm1.png
+
+newmtl r34_door1_lm2
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 1
+map_Kd r34_door1_lm2.png
+map_d r34_door1_lm2.png
+
+newmtl r34_educate_lm1
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 1
+map_Kd r34_educate_lm1.png
+map_d r34_educate_lm1.png

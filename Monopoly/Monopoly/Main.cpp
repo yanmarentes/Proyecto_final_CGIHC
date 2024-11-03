@@ -101,6 +101,8 @@ Texture casilla36;
 Texture casilla37;
 Texture casilla38;
 Texture casilla39;
+Texture Letrero;
+Texture Letrero1;
 
 
 ModelSquareMovement main_character;
@@ -149,9 +151,36 @@ Model piplup;
 Model league;
 Model shaymin;
 Model estadio;
+Model cynthia;
+Model cynthia_brazo;
+Model cynthia_brazo1;
 
-Model casa_heeler;
-Model botella_vidrio;
+//Models bluey
+Model bingo;
+Model chilli;
+Model babybluey;
+Model mack;
+Model rusty;
+Model socks;
+Model stripe;
+Model unicorse;
+Model bandit;
+Model jack;
+Model dollar;
+Model bluey;
+
+//Model ciudad
+Model pokeball;
+Model arco;
+Model arco1;
+Model care;
+Model edificio1;
+Model edificio2;
+Model edificio3;
+Model edificio4;
+Model edificio5;
+
+
 
 Skybox skybox_night;
 Skybox skybox_day;
@@ -165,6 +194,13 @@ Material Material_opaco;
 GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
 static double limitFPS = 1.0 / 60.0;
+float toffsetflechau = 0.0f;
+float toffsetflechav = 0.0f;
+int state = 0;
+float cartelPosY = 5.5f;
+float cartelRotation = 0.05f;
+GLuint uniformTextureOffset = 0;
+float cartelSpeed = 0.05f;
 
 // luz direccional
 DirectionalLight main_light_noche;
@@ -326,6 +362,19 @@ void CreateObjects()
 
 	};
 
+	unsigned int flechaIndices[] = {
+   0, 1, 2,
+   0, 2, 3,
+	};
+
+	GLfloat flechaVertices[] = {
+		-0.5f, 0.0f, 0.5f,		0.0f, 0.0f,		0.0f, -1.0f, 0.0f,
+		0.5f, 0.0f, 0.5f,		1.0f, 0.0f,		0.0f, -1.0f, 0.0f,
+		0.5f, 0.0f, -0.5f,		1.0f, 1.0f,		0.0f, -1.0f, 0.0f,
+		-0.5f, 0.0f, -0.5f,		0.0f, 1.0f,		0.0f, -1.0f, 0.0f,
+
+	};
+
 	Mesh* obj1 = new Mesh();
 	obj1->CreateMesh(vertices, indices, 32, 12);
 	meshList.push_back(obj1);
@@ -341,6 +390,10 @@ void CreateObjects()
 	Mesh* obj4 = new Mesh();
 	obj4->CreateMesh(vegetacionVertices, vegetacionIndices, 64, 12);
 	meshList.push_back(obj4);
+
+	Mesh* obj6 = new Mesh();
+	obj6->CreateMesh(flechaVertices, flechaIndices, 32, 6);
+	meshList.push_back(obj6);
 
 	calcAverageNormals(indices, 12, vertices, 32, 8, 5);
 
@@ -527,13 +580,13 @@ void render_current_model(int state_main_movement, int current_casilla, GLuint &
 		break;
 	case 3: // Bajando
 		modelPosY -= modelSpeed * deltaTime;
-		if (modelPosY <= -10.0f) {
+		if (modelPosY <= -12.0f) {
 			modelPosY += 0.1f;
 			modelstate = 4; // Cambia a girando hacia abajo
 		}
 		break;
 	case 4: // Reposo
-		modelPosY = -10.0f;
+		modelPosY = -12.0f;
 		break;
 	}
 
@@ -550,7 +603,7 @@ void render_current_model(int state_main_movement, int current_casilla, GLuint &
 			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			ark_maxim.RenderModel();
-
+			
 
 			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
 			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z - main_character.mov_model_side));
@@ -731,9 +784,9 @@ void render_current_model(int state_main_movement, int current_casilla, GLuint &
 		case 14:
 			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + main_character.mov_model_side, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 18.0f));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
-			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-			Luffy.RenderModel();
+			bluey.RenderModel();
 
 			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
 			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x + main_character.mov_model_side, main_character.ubi_model.y, main_character.ubi_model.z));
@@ -747,7 +800,7 @@ void render_current_model(int state_main_movement, int current_casilla, GLuint &
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-			Luffy.RenderModel();
+			babybluey.RenderModel();
 
 			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
 			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x + main_character.mov_model_side, main_character.ubi_model.y, main_character.ubi_model.z));
@@ -759,9 +812,9 @@ void render_current_model(int state_main_movement, int current_casilla, GLuint &
 		case 16:
 			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + main_character.mov_model_side, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 18.0f));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
-			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-			Luffy.RenderModel();
+			bandit.RenderModel();
 
 			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
 			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x + main_character.mov_model_side, main_character.ubi_model.y, main_character.ubi_model.z));
@@ -775,7 +828,7 @@ void render_current_model(int state_main_movement, int current_casilla, GLuint &
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-			Luffy.RenderModel();
+			dollar.RenderModel();
 
 			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
 			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x + main_character.mov_model_side, main_character.ubi_model.y, main_character.ubi_model.z));
@@ -787,9 +840,9 @@ void render_current_model(int state_main_movement, int current_casilla, GLuint &
 		case 18:
 			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + main_character.mov_model_side, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z - 18.0f));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
-			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-			Luffy.RenderModel();
+			chilli.RenderModel();
 
 			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
 			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x + main_character.mov_model_side, main_character.ubi_model.y, main_character.ubi_model.z));
@@ -803,7 +856,7 @@ void render_current_model(int state_main_movement, int current_casilla, GLuint &
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-			Luffy.RenderModel();
+			socks.RenderModel();
 
 			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
 			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x + main_character.mov_model_side, main_character.ubi_model.y, main_character.ubi_model.z));
@@ -817,7 +870,7 @@ void render_current_model(int state_main_movement, int current_casilla, GLuint &
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-			Luffy.RenderModel();
+			unicorse.RenderModel();
 
 			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
 			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x + main_character.mov_model_side, main_character.ubi_model.y, main_character.ubi_model.z));
@@ -829,9 +882,9 @@ void render_current_model(int state_main_movement, int current_casilla, GLuint &
 		case 21:
 			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z + main_character.mov_model_side));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
-			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-			Luffy.RenderModel();
+			stripe.RenderModel();
 
 			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
 			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z + main_character.mov_model_side));
@@ -843,9 +896,9 @@ void render_current_model(int state_main_movement, int current_casilla, GLuint &
 		case 22:
 			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z + main_character.mov_model_side));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
-			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-			Luffy.RenderModel();
+			rusty.RenderModel();
 
 			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
 			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z + main_character.mov_model_side));
@@ -857,9 +910,9 @@ void render_current_model(int state_main_movement, int current_casilla, GLuint &
 		case 23:
 			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z + main_character.mov_model_side));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
-			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-			Luffy.RenderModel();
+			mack.RenderModel();
 
 			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
 			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z + main_character.mov_model_side));
@@ -871,9 +924,9 @@ void render_current_model(int state_main_movement, int current_casilla, GLuint &
 		case 24:
 			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z + main_character.mov_model_side));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
-			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-			Luffy.RenderModel();
+			bingo.RenderModel();
 
 			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
 			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z + main_character.mov_model_side));
@@ -885,9 +938,9 @@ void render_current_model(int state_main_movement, int current_casilla, GLuint &
 		case 25:
 			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z + main_character.mov_model_side));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
-			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-			Luffy.RenderModel();
+			jack.RenderModel();
 
 			modelCasilla = glm::translate(modelCasilla, glm::vec3(0.0f, -0.2f, 0.0f));
 			modelCasilla = glm::translate(modelCasilla, glm::vec3(main_character.ubi_model.x, main_character.ubi_model.y, main_character.ubi_model.z + main_character.mov_model_side));
@@ -913,7 +966,7 @@ void render_current_model(int state_main_movement, int current_casilla, GLuint &
 		case 27:
 			model = glm::translate(model, glm::vec3(main_character.ubi_model.x + 18.0f, main_character.ubi_model.y + modelPosY, main_character.ubi_model.z + main_character.mov_model_side));
 			model = glm::rotate(model, glm::radians(modelRotation), glm::vec3(0.0f, 1.0f, 0.0f));
-			//model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
 			glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 			center.RenderModel();
 
@@ -1170,6 +1223,7 @@ int main()
 	casilla37 = Texture("Textures/casilla37.png"); casilla37.LoadTextureA();
 	casilla38 = Texture("Textures/casilla38.png"); casilla38.LoadTextureA();
 	casilla39 = Texture("Textures/casilla39.png"); casilla39.LoadTextureA();
+	Letrero = Texture("Textures/letrero.png");Letrero.LoadTextureA();
 	// +++++++++++++++++++++++++++++++ Modelos ++++++++++++++++++++++++++++++++
 	main_character.LoadModel("Models/chopper_sin_extremidades.obj");
 	main_character.load_animation_parameters(MAIN_DISTANCE_CORNER, -0.7f, 180.0f, 0);
@@ -1200,12 +1254,9 @@ int main()
 	baya_frambu.LoadModel("Models/baya_frambu.obj");
 	baya_latano.LoadModel("Models/baya_latano.obj");
 	barry.LoadModel("Models/barry.obj");
-	casa_heeler.LoadModel("Models/casa_heeler.obj");
 	casa_hoja_verde.LoadModel("Models/casa_hoja_verde.obj");
 	center.LoadModel("Models/center.obj");
 	dawn.LoadModel("Models/dawn.obj");
-	estadio.LoadModel("Models/estadio.obj");
-	garchomp.LoadModel("Models/garchomp.obj");
 	Lectro.LoadModel("Models/Lectro.obj");
 	lucario.LoadModel("Models/lucario.obj");
 	moby_dick.LoadModel("Models/Moby Dick.obj");
@@ -1225,7 +1276,34 @@ int main()
 	laboon.LoadModel("Models/Laboon.obj");
 	merry.LoadModel("Models/Going Merry.obj");
 	hito.LoadModel("Models/hito_hito.obj");
-
+	bluey.LoadModel("Models/bluey.obj");
+	babybluey.LoadModel("Models/Blueybaby.obj");
+	bandit.LoadModel("Models/Bandit.obj");
+	chilli.LoadModel("Models/Chilli.obj");
+	dollar.LoadModel("Models/dollar.obj");
+	socks.LoadModel("Models/Socks.obj");
+	unicorse.LoadModel("Models/unicorse.obj");
+	stripe.LoadModel("Models/Stripe.obj");
+	rusty.LoadModel("Models/Ruysty.obj");
+	mack.LoadModel("Models/mackenzie.obj");
+	bingo.LoadModel("Models/bingo.obj");
+	jack.LoadModel("Models/jack.obj");
+	estadio.LoadModel("Models/estadio.obj");
+	garchomp.LoadModel("Models/garchomp.obj");
+	cynthia.LoadModel("Models/cynthia.obj");
+	cynthia_brazo.LoadModel("Models/cynthia_brazo.obj");
+	cynthia_brazo1.LoadModel("Models/cynthia_brazo2.obj");
+	pokeball.LoadModel("Models/pokeball.obj");
+	care.LoadModel("Models/PokémonDayCare.obj");
+	edificio1.LoadModel("Models/Pokemon Mansion.obj");
+	edificio2.LoadModel("Models/House (Blue).obj");
+	edificio3.LoadModel("Models/House (Green).obj");
+	edificio4.LoadModel("Models/House (Yellow).obj");
+	
+	arco = Model();
+	arco.LoadModel("Models/arco1.obj");
+	arco1 = Model();
+	arco1.LoadModel("Models/columnas_metas.obj");
 	// +++++++++++++++++++++++++skybox+++++++++++++++++++++++++++++++++++++++++
 	std::vector<std::string> skyboxFaces_night;
 	skyboxFaces_night.push_back("Textures/Skybox/cupertin-lake-night_rt.png");
@@ -1332,6 +1410,14 @@ int main()
 
 	std::srand(static_cast<unsigned int>(std::time(0)));
 
+	//cynthia
+	float mov_brazo = 0.0f;
+	float increment = 0.02f; // Cambia este valor para ajustar la velocidad
+	bool increasing = true;
+	float mov_pokeballx = 0.0f;
+	float mov_pokebally = 6.0f;
+	float incrementX = 0.01f; // Ajusta la velocidad de movimiento en X
+	float decrementY = 0.01f;
 	//Ovnis
 	float ovni_rotate = 0;
 	float velocidad_rotate_ovni = 2.0f;
@@ -1378,6 +1464,8 @@ int main()
 		uniformView = shaderList[0].GetViewLocation();
 		uniformEyePosition = shaderList[0].GetEyePositionLocation();
 		uniformColor = shaderList[0].getColorLocation();
+		uniformTextureOffset = shaderList[0].getOffsetLocation();
+		glm::vec2 toffset = glm::vec2(0.0f, 0.0f);
 
 		//informaci�n en el shader de intensidad especular y brillo
 		uniformSpecularIntensity = shaderList[0].GetSpecularIntensityLocation();
@@ -1493,6 +1581,233 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Rueda_barco.RenderModel();
 
+		//Arcos
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-58.0f, 0.0f, 67.0f));
+		model = glm::scale(model, glm::vec3(2.5f, 2.5f, 2.5f));
+		model_aux = model;
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		arco.RenderModel();
+
+
+		toffsetflechau += 0.001;
+		toffsetflechav = 0.000;
+		if (toffsetflechau > 1.0)
+			toffsetflechau = 0.0;
+		toffset = glm::vec2(toffsetflechau, toffsetflechav);
+		model = model_aux;
+		model = glm::scale(model, glm::vec3(1.0f, 1.4f, 5.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.1f));
+		model = glm::translate(model, glm::vec3(0.0f, cartelPosY, -0.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(1.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(cartelRotation), glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Letrero.UseTexture();
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		meshList[4]->RenderMesh();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-70.0f, 0.0f, 60.0f));
+		model = glm::scale(model, glm::vec3(2.5f, 2.5f, 2.5f));
+		model_aux = model;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		arco1.RenderModel();
+
+
+		toffsetflechau += 0.001;
+		toffsetflechav = 0.000;
+		if (toffsetflechau > 1.0)
+			toffsetflechau = 0.0;
+		toffset = glm::vec2(toffsetflechau, toffsetflechav);
+		model = model_aux;
+		model = glm::scale(model, glm::vec3(6.0f, 1.5f, 1.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.1f));
+		model = glm::translate(model, glm::vec3(0.0f, cartelPosY, -0.0f));
+		model = glm::rotate(model ,  90 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, 180 * toRadians, glm::vec3(1.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(cartelRotation), glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Letrero.UseTexture();
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		meshList[4]->RenderMesh();
+
+		//Main model Cynthia
+		if (increasing) {
+			mov_brazo += increment;
+			if (mov_brazo >= 2.0f) {
+				mov_brazo = 2.0f;
+				increasing = false; // Cambia la dirección
+			}
+		}
+		else {
+			mov_brazo -= increment;
+			if (mov_brazo <= -2.0f) {
+				mov_brazo = -2.0f;
+				increasing = true; // Cambia la dirección
+			}
+		}
+
+		if (mov_pokeballx < 7.0f) {
+			mov_pokeballx += incrementX; // Aumenta mov_pokeballx
+		}
+
+		if (mov_pokebally > 0.0f) {
+			mov_pokebally -= decrementY; // Disminuye mov_pokebally
+		}
+
+		// Verifica si se ha llegado al final
+		if (mov_pokeballx >= 7.0f && mov_pokebally <= 0.0f) {
+			// Reinicia los valores
+			mov_pokeballx = 0.0f;
+			mov_pokebally = 7.0f;
+		}
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(5.0f, 0.0f, 14.0f));
+		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		model_aux = model;
+		cynthia.RenderModel();
+
+		model = model_aux;
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cynthia_brazo.RenderModel();
+
+		model = model_aux;
+		model = glm::rotate(model, glm::radians(mov_brazo), glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cynthia_brazo1.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(2.0f, 0.0f, 2.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		estadio.RenderModel();
+
+		model = model_aux;
+		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+		//model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::translate(model, glm::vec3(0.0f, mov_pokebally, mov_pokeballx));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		pokeball.RenderModel();
+
+		//Arcos
+		switch (state) {
+		case 0: // Bajando
+			cartelPosY -= cartelSpeed * deltaTime;
+			if (cartelPosY <= 0.25f) {
+				cartelPosY += 0.1f;
+				state = 1; // Cambia a girando hacia abajo
+			}
+			break;
+		case 1: // Girando hacia abajo
+			cartelRotation += 45.0f * (deltaTime / 8); // 360 grados por segundo
+			if (cartelRotation >= 360.0f) {
+				cartelRotation = 0.0f;
+				state = 2; // Cambia a subiendo
+			}
+			break;
+		case 2: // Subiendo
+			cartelPosY += cartelSpeed * deltaTime;
+			if (cartelPosY >= 6.0f) {
+				cartelPosY = 6.0f;
+				state = 3; // Cambia a girando hacia arriba
+			}
+			break;
+		case 3: // Girando hacia arriba
+			cartelRotation += 45.0f * (deltaTime / 8); // 360 grados por segundo
+			if (cartelRotation >= 360.0f) {
+				cartelRotation = 0.0f;
+				state = 0; // Regresa a bajando
+			}
+			break;
+		}
+
+		//Ciudad
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(130.0f, 0.0f, 130.0f));
+		model = glm::scale(model, glm::vec3(15.0f, 15.0f, 15.0f));
+		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		merry.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-130.0f, 0.0f, -130.0f));
+		model = glm::scale(model, glm::vec3(20.0f, 20.0f, 20.0f));
+		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		moby_dick.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-180.0f, -3.0f, 180.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
+		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		ark_maxim.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-150.0f, 0.0f, -10.0f));
+		model = glm::scale(model, glm::vec3(6.0f, 6.0f, 6.0f));
+		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		league.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -150.0f));
+		model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		care.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -120.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		//model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		edificio1.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-120.0f, 0.0f, 150.0f));
+		model = glm::scale(model, glm::vec3(12.0f, 12.0f, 12.0f));
+		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		edificio2.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-60.0f, 0.0f, 163.0f));
+		model = glm::scale(model, glm::vec3(12.0f, 12.0f, 12.0f));
+		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		edificio3.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 175.0f));
+		model = glm::scale(model, glm::vec3(12.0f, 12.0f, 12.0f));
+		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		edificio4.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(200.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(30.0f, 30.0f, 30.0f));
+		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		laboon.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(100.0f, 0.0f, -160.0f));
+		model = glm::scale(model, glm::vec3(25.0f, 25.0f, 25.0f));
+		//model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		ship.RenderModel();
+
 
 		manage_ejecutando_tirada(state_main_movement, &main_character, &info_main_character, modelstate, deltaTime);
 
@@ -1584,7 +1899,7 @@ int main()
 
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		dadoTexture_8.UseTexture();
-		meshList[4]->RenderMesh();
+		meshList[5]->RenderMesh();
 
 		// 4 caras
 		model = glm::mat4(1.0);
